@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const never = [
+  'run an AI model on our servers',
+  'receive, see, or store your decisions',
+  'require an account, a login, or any API key',
+  'set advertising or cross-site tracking cookies',
+];
+const how = [
+  'The worked examples are pre-generated at build time — static HTML, no model call.',
+  'When you use the forge, your decision is assembled into a prompt in your browser and handed to your own AI (ChatGPT / Claude) or your own MCP agent. It is never sent to us.',
+  'The MCP server returns a directive your agent executes. We run no inference and keep no logs of your input.',
+];
+---
+
+<Layout
+  title="Privacy — Irrational"
+  description="We run no AI model and store nothing. Your decision is audited by your own AI and never touches us."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">Privacy</p>
+      <h1>We run no model.<br />We store nothing.</h1>
+      <p class="lede">
+        Most "AI decision coaches" keep your decisions on their servers and email you about them. Irrational is
+        the opposite by design: the audit is done by <em>your</em> AI, and your decision never reaches us.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap two-col">
+    <div class="col">
+      <h2>We never</h2>
+      <ul class="ticks no">
+        {never.map((x) => <li>{x}</li>)}
+      </ul>
+    </div>
+    <div class="col">
+      <h2>How it works</h2>
+      <ul class="ticks">
+        {how.map((x) => <li>{x}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap prose">
+    <p class="fine">
+      Analytics: we use Cloudflare Web Analytics, which is cookie-free and collects no personal data — only
+      aggregate page counts. The whole site is static and open-source; you can
+      <a href="https://github.com/urbanmorph/irrational" target="_blank" rel="noopener">read every line</a> or
+      run your own copy.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    padding-top: 24px;
+    max-width: 880px;
+  }
+  .col h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    margin: 0 0 14px;
+  }
+  .ticks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .ticks li {
+    position: relative;
+    padding: 8px 0 8px 26px;
+    border-top: 1px solid var(--color-rule);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+  .ticks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--color-fam-meaning);
+    font-family: var(--font-mono);
+  }
+  .ticks.no li::before {
+    content: '✕';
+    color: var(--color-vermilion);
+  }
+  .fine {
+    margin-top: 8px;
+    color: #4a423b;
+  }
+  @media (max-width: 640px) {
+    .two-col {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+</style>

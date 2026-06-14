@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BiasCard from '../components/BiasCard.astro';
+import { BIASES, FAMILIES, type Family } from '../data/biases';
+
+const families = Object.keys(FAMILIES) as Family[];
+const indexed = BIASES.map((bias, i) => ({ bias, i }));
+---
+
+<Layout
+  title="The Field Guide — Irrational"
+  description="A specimen catalogue of 22 cognitive biases, grouped by Buster Benson's four problems the brain solves — each with the question that breaks its spell, and a verified citation."
+>
+  <section class="fg-head">
+    <div class="wrap">
+      <p class="label">The Field Guide</p>
+      <h1>Twenty-two biases,<br />four problems the brain solves.</h1>
+      <p class="lede">
+        A specimen catalogue — each entry tied to the exact moment it distorts a decision, the question that
+        breaks its spell, and a verified citation. Tap any card to open it.
+      </p>
+    </div>
+  </section>
+
+  {
+    families.map((fam) => {
+      const meta = FAMILIES[fam];
+      const items = indexed.filter(({ bias }) => bias.family === fam);
+      return (
+        <section class="plate">
+          <div class="wrap">
+            <div class="plate-head" style={`--edge:${meta.color}`}>
+              <span class="dot" />
+              <h2>{meta.label}</h2>
+              <p class="blurb">{meta.blurb}</p>
+            </div>
+            <div class="cards">
+              {items.map(({ bias, i }) => (
+                <BiasCard bias={bias} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    })
+  }
+
+  <section class="cta">
+    <div class="wrap">
+      <hr class="spectrum-rule" />
+      <p>
+        See the engine put these to work — <a href="/#engine">a worked audit →</a> · or wire it into your own
+        agent via <a href="/mcp">MCP →</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .fg-head {
+    padding: 64px 0 8px;
+  }
+  .fg-head h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    margin-top: 12px;
+    line-height: 1.02;
+  }
+  .lede {
+    margin-top: 16px;
+    max-width: 54ch;
+    color: #4a423b;
+  }
+  .plate {
+    padding: 34px 0 6px;
+  }
+  .plate-head {
+    border-top: 1px solid var(--color-rule);
+    padding-top: 20px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 13px;
+    row-gap: 3px;
+    align-items: center;
+  }
+  .plate-head .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--edge);
+    grid-row: 1 / 3;
+    align-self: start;
+    margin-top: 8px;
+  }
+  .plate-head h2 {
+    font-size: 1.6rem;
+  }
+  .plate-head .blurb {
+    grid-column: 2;
+    margin: 0;
+    color: var(--color-taupe);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .cards {
+    margin-top: 10px;
+  }
+  .cta {
+    padding: 24px 0 8px;
+  }
+  .cta p {
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    color: var(--color-taupe);
+    line-height: 1.7;
+  }
+  .cta a {
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-rule);
+    text-decoration: none;
+  }
+  .cta a:hover {
+    color: var(--color-vermilion);
+  }
+</style>

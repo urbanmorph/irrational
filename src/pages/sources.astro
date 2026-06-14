@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { BIASES, FAMILIES, type Family } from '../data/biases';
+
+const families = Object.keys(FAMILIES) as Family[];
+const canon = [
+  'Daniel Kahneman (2011), Thinking, Fast and Slow.',
+  'Richard Thaler & Cass Sunstein (2008), Nudge: Improving Decisions About Health, Wealth, and Happiness.',
+  'Dan Ariely (2008), Predictably Irrational.',
+  'Robert Cialdini (1984), Influence: How and Why People Agree to Things.',
+];
+---
+
+<Layout
+  title="Sources — Irrational"
+  description="Every bias in the catalogue, cited to its primary source. Verified against the original journals and publishers."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">Sources</p>
+      <h1>Every claim, cited.</h1>
+      <p class="lede">
+        Each of the 22 biases is grounded in its primary source — verified against the original journals,
+        APA PsycNet, and publisher pages, not paraphrased from memory.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap srcs">
+    <h2 class="grp">The canon</h2>
+    <ul class="biblist">
+      {canon.map((c) => <li>{c}</li>)}
+    </ul>
+
+    {
+      families.map((fam) => (
+        <div class="fam-group">
+          <h2 class="grp" style={`--edge:${FAMILIES[fam].color}`}>
+            <span class="dot" />
+            {FAMILIES[fam].label}
+          </h2>
+          <ul class="biblist">
+            {BIASES.filter((b) => b.family === fam).map((b) => (
+              <li>
+                <span class="bname">{b.name}.</span>{' '}
+                {b.sourceUrl ? (
+                  <a href={b.sourceUrl} target="_blank" rel="noopener">
+                    {b.source}
+                  </a>
+                ) : (
+                  b.source
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+</Layout>
+
+<style>
+  .srcs {
+    max-width: 820px;
+    padding-bottom: 16px;
+  }
+  .grp {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    margin: 36px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .grp .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--edge);
+  }
+  .biblist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .biblist li {
+    padding: 10px 0;
+    border-top: 1px solid var(--color-rule);
+    font-size: 0.96rem;
+    line-height: 1.5;
+    color: #4a423b;
+  }
+  .bname {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .biblist a {
+    color: #4a423b;
+    border-bottom: 1px solid var(--color-rule);
+    text-decoration: none;
+  }
+  .biblist a:hover {
+    color: var(--color-vermilion);
+  }
+</style>

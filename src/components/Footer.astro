@@ -1,0 +1,81 @@
+---
+const repo = 'https://github.com/urbanmorph/irrational';
+const links: [string, string][] = [
+  ['Field guide', '/biases'],
+  ['The engine', '/#engine'],
+  ['Connect (MCP)', '/mcp'],
+  ['About', '/about'],
+  ['Privacy', '/privacy'],
+  ['Sources', '/sources'],
+];
+---
+
+<footer class="above site-footer">
+  <hr class="spectrum-rule" />
+  <div class="wrap foot-inner">
+    <div class="brand-col">
+      <a href="/" class="foot-brand">Irrational</a>
+      <p class="label">Open-source · runs no model · stores nothing</p>
+    </div>
+    <nav class="foot-nav" aria-label="Footer">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+      <a href={repo} target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+  <div class="wrap foot-bottom">
+    <span class="label">Fraunces · Newsreader · IBM Plex Mono</span>
+    <span class="label">MIT · 2026</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 90px;
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding-top: 30px;
+  }
+  .foot-brand {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 1.6rem;
+    text-decoration: none;
+    display: block;
+  }
+  .brand-col .label {
+    margin-top: 8px;
+  }
+  .foot-nav {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 9px 30px;
+    align-content: start;
+  }
+  .foot-nav a {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    opacity: 0.75;
+  }
+  .foot-nav a:hover {
+    opacity: 1;
+    color: var(--color-vermilion);
+  }
+  .foot-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 22px 0 48px;
+  }
+  @media (max-width: 560px) {
+    .foot-nav {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,359 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AuditCard from '../components/AuditCard.astro';
+import { EXAMPLES } from '../data/examples';
+import { forgePrefix } from '../engine/scaffold';
+
+const prefix = forgePrefix('forward');
+const heroBands: [string, string, string][] = [
+  ['sunk cost', '--color-s1', '64%'],
+  ['overconfidence', '--color-s2', '48%'],
+  ['planning fallacy', '--color-s3', '72%'],
+  ['confirmation', '--color-s4', '40%'],
+  ['anchoring', '--color-s5', '58%'],
+  ['hindsight', '--color-s6', '34%'],
+];
+---
+
+<Layout>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-left">
+        <p class="label hl">Open · Adversarial · via MCP</p>
+        <h1>Irrational</h1>
+        <p class="tag">
+          A field guide to the mistakes your mind makes — and an engine that
+          <em>refracts your decision</em> into the biases bending it.
+        </p>
+
+        <div class="scenarios">
+          <p class="label sc-label">Try a pre-built scenario</p>
+          <div class="chips">
+            {
+              EXAMPLES.map((ex, i) => (
+                <button class:list={['chip', { active: i === 0 }]} data-target={ex.id} data-title={ex.title}>
+                  {ex.chip}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="forge">
+          <label class="label sc-label" for="forge-input">…or audit your own decision</label>
+          <textarea id="forge-input" rows="2" placeholder="Describe a decision and how you got to it…"></textarea>
+          <div class="forge-actions">
+            <button id="copy-btn" class="fbtn primary">Copy prompt</button>
+            <button data-ai="chatgpt" class="fbtn">Open in ChatGPT</button>
+            <button data-ai="claude" class="fbtn">Open in Claude</button>
+          </div>
+          <p class="label fineprint" id="forge-note">Runs in your AI — we keep no model and store nothing.</p>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="prism" aria-hidden="true">
+          <div class="beam-in"></div>
+          <div class="glass"></div>
+          <div class="bands">
+            {
+              heroBands.map(([nm, varName, w]) => (
+                <div class="band">
+                  <span class="bar" style={`width:${w};background:var(${varName});color:var(${varName})`} />
+                  <span class="nm">{nm}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="spectrum-rule" />
+  </section>
+
+  <section class="engine" id="engine">
+    <div class="wrap">
+      <div class="eyebrow">
+        <span class="label">The Engine · a worked audit</span>
+        <span class="ln"></span>
+        <span class="label showing" id="showing">{EXAMPLES[0].title}</span>
+      </div>
+      {EXAMPLES.map((ex, i) => <AuditCard ex={ex} active={i === 0} />)}
+      <p class="more">
+        This is what the engine returns — verdict-first, every bias tied to your own words.
+        <a href="/biases">Browse all 22 biases →</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<script define:vars={{ prefix }}>
+  const chips = document.querySelectorAll('.chip[data-target]');
+  const readouts = document.querySelectorAll('[data-readout]');
+  const showing = document.getElementById('showing');
+
+  chips.forEach((c) =>
+    c.addEventListener('click', () => {
+      const id = c.getAttribute('data-target');
+      chips.forEach((x) => x.classList.toggle('active', x === c));
+      readouts.forEach((r) => {
+        r.hidden = r.getAttribute('data-id') !== id;
+      });
+      if (showing) showing.textContent = c.getAttribute('data-title') || '';
+    }),
+  );
+
+  const input = document.getElementById('forge-input');
+  const note = document.getElementById('forge-note');
+  const buildPrompt = () => {
+    const t = (input && input.value ? input.value : '').trim();
+    return (
+      prefix +
+      '\n\n--- MY DECISION ---\n' +
+      (t || '(describe your decision and how you got to it here)') +
+      '\n\nProduce the composed audit: THE CALL (verdict first, naming its top bias), THE AUDIT' +
+      " (biases with evidence from my words, outside view, premortem), SIT WITH THIS, THE RECALIBRATION."
+    );
+  };
+
+  const copyBtn = document.getElementById('copy-btn');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(buildPrompt());
+      copyBtn.textContent = 'Copied ✓';
+      setTimeout(() => (copyBtn.textContent = 'Copy prompt'), 1600);
+    } catch {
+      copyBtn.textContent = 'Copy failed';
+    }
+  });
+
+  document.querySelectorAll('[data-ai]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(buildPrompt());
+        if (note) note.textContent = 'Prompt copied — paste it into the new chat.';
+      } catch {
+        /* clipboard may be blocked; still open the chat */
+      }
+      const url = b.getAttribute('data-ai') === 'claude' ? 'https://claude.ai/new' : 'https://chatgpt.com/';
+      window.open(url, '_blank', 'noopener');
+    }),
+  );
+</script>
+
+<style>
+  .hero {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(60% 70% at 80% 38%, rgba(226, 69, 44, 0.13), transparent 60%);
+  }
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 46px;
+    align-items: center;
+    padding: 74px 32px 58px;
+  }
+  .hero h1 {
+    font-style: italic;
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.9;
+    margin-top: 14px;
+  }
+  .hl {
+    color: var(--color-taupe-ink);
+  }
+  .tag {
+    font-size: 1.3rem;
+    max-width: 30ch;
+    margin-top: 18px;
+    color: #ede6da;
+  }
+  .tag em {
+    font-style: italic;
+    color: #fff;
+  }
+  .scenarios {
+    margin-top: 30px;
+  }
+  .sc-label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--color-taupe-ink);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: var(--color-ink-2);
+    color: #d8cfc5;
+    border: 1px solid var(--color-rule-ink);
+    border-radius: 20px;
+    padding: 8px 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover {
+    border-color: var(--color-taupe);
+  }
+  .chip.active {
+    background: var(--color-vermilion);
+    color: #fff;
+    border-color: var(--color-vermilion);
+  }
+  .forge {
+    margin-top: 26px;
+    max-width: 460px;
+  }
+  .forge textarea {
+    width: 100%;
+    background: var(--color-ink-2);
+    border: 1px solid var(--color-rule-ink);
+    border-radius: 8px;
+    color: var(--color-paper);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 12px 14px;
+    resize: vertical;
+  }
+  .forge textarea::placeholder {
+    color: #7d736a;
+  }
+  .forge-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .fbtn {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: transparent;
+    color: #d8cfc5;
+    border: 1px solid var(--color-rule-ink);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .fbtn:hover {
+    border-color: var(--color-taupe);
+    color: #fff;
+  }
+  .fbtn.primary {
+    background: var(--color-vermilion);
+    color: #fff;
+    border-color: var(--color-vermilion);
+  }
+  .fineprint {
+    margin-top: 11px;
+    color: var(--color-taupe-ink);
+  }
+  .hero-right {
+    display: flex;
+    justify-content: center;
+  }
+  .prism {
+    display: flex;
+    align-items: center;
+    min-height: 280px;
+  }
+  .beam-in {
+    height: 2px;
+    width: 46px;
+    background: linear-gradient(90deg, transparent, #fff);
+    box-shadow: 0 0 12px #fff;
+    align-self: center;
+  }
+  .glass {
+    width: 0;
+    height: 0;
+    border-left: 42px solid transparent;
+    border-right: 42px solid transparent;
+    border-bottom: 80px solid rgba(255, 255, 255, 0.1);
+    filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.18));
+    transform: rotate(8deg);
+    margin: 0 4px;
+  }
+  .bands {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-left: 8px;
+  }
+  .band {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .band .bar {
+    height: 6px;
+    border-radius: 3px;
+    box-shadow: 0 0 9px currentColor;
+    opacity: 0.9;
+    display: inline-block;
+  }
+  .band .nm {
+    font-family: var(--font-mono);
+    font-size: 0.71rem;
+    color: #d8cfc5;
+    white-space: nowrap;
+  }
+  .engine {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    padding: 56px 0 72px;
+  }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .eyebrow .ln {
+    flex: 1;
+    height: 1px;
+    background: var(--color-rule);
+  }
+  .engine .label {
+    color: var(--color-taupe);
+  }
+  .showing {
+    color: var(--color-ink);
+  }
+  .more {
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-taupe);
+  }
+  .more a {
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-rule);
+    text-decoration: none;
+  }
+  @media (max-width: 820px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      padding: 54px 32px 40px;
+    }
+    .hero-right {
+      order: -1;
+      justify-content: flex-start;
+    }
+  }
+</style>

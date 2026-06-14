@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { TOOLS } from '../mcp/handler';
+
+const endpoint = 'https://irrational.pages.dev/mcp/server';
+const cli = `claude mcp add --transport http irrational ${endpoint}`;
+const json = `{
+  "mcpServers": {
+    "irrational": { "type": "http", "url": "${endpoint}" }
+  }
+}`;
+---
+
+<Layout
+  title="Connect the engine — Irrational · MCP"
+  description="Irrational is an open, stateless MCP server. It runs no model — it hands your agent the adversarial framework to execute. No keys, nothing stored."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">The Engine · MCP</p>
+      <h1>Wire the bias engine into your agent.</h1>
+      <p class="lede">
+        Irrational is an open, <em>stateless</em> MCP server. It runs no model — it returns the adversarial
+        framework, the 22-bias catalogue, and the procedure as a directive <em>your</em> agent's own model
+        executes. No keys, nothing stored.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap mcp-body">
+    <h2>Endpoint</h2>
+    <pre class="code"><code>{endpoint}</code></pre>
+
+    <h2>Add it to Claude Code</h2>
+    <pre class="code"><code>{cli}</code></pre>
+
+    <h2>…or any MCP client</h2>
+    <pre class="code"><code>{json}</code></pre>
+
+    <h2>Tools</h2>
+    <div class="tools">
+      {
+        TOOLS.map((t) => (
+          <div class="tool">
+            <div class="tname">{t.name}</div>
+            <div class="tdesc">{t.description}</div>
+          </div>
+        ))
+      }
+    </div>
+
+    <h2>The pattern</h2>
+    <p class="pp">
+      An agent calls <code class="inline-code">analyze_decision</code> with a judgment and the reasoning behind it.
+      The tool returns a directive — the adversarial contract, the catalogue, the procedure, and the required
+      verdict-first output shape. The agent's own model produces the audit. <strong>The discipline is ours; the
+      reasoning is yours.</strong>
+    </p>
+    <p class="pp">
+      Best used <strong>systematically</strong> — have an agent audit its own draft recommendation before it
+      finalizes, or let a second agent red-team the first. That external check is where the real debiasing lives.
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .mcp-body {
+    max-width: 760px;
+    padding-bottom: 16px;
+  }
+  .mcp-body h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    margin: 34px 0 12px;
+  }
+  .code {
+    background: var(--color-ink);
+    color: #e6ded3;
+    border-radius: 8px;
+    padding: 15px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .tools {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tool {
+    border: 1px solid var(--color-rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: #fff;
+  }
+  .tname {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    color: var(--color-vermilion);
+    font-weight: 500;
+  }
+  .tdesc {
+    margin-top: 5px;
+    font-size: 0.96rem;
+    color: #4a423b;
+  }
+  .pp {
+    max-width: 65ch;
+    margin: 0 0 16px;
+  }
+</style>

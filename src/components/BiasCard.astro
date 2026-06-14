@@ -1,0 +1,155 @@
+---
+import { FAMILIES, type Bias } from '../data/biases';
+
+interface Props {
+  bias: Bias;
+  index: number; // global catalogue index (0-based)
+}
+const { bias, index } = Astro.props;
+const fam = FAMILIES[bias.family];
+const no = String(index + 1).padStart(2, '0');
+---
+
+<details class="card" style={`--edge:${fam.color}`}>
+  <summary>
+    <span class="no">No.{no}</span>
+    <span class="sum-main">
+      <span class="fam">{fam.label}</span>
+      <span class="name">{bias.name}</span>
+      <span class="hook">{bias.hook}</span>
+    </span>
+    <span class="plus" aria-hidden="true">+</span>
+  </summary>
+  <div class="body">
+    <p class="ask"><span class="ask-label">The engine asks</span>“{bias.ask}”</p>
+    <p class="def">{bias.definition}</p>
+    <p class="row"><b>Example</b> {bias.example}</p>
+    <p class="row"><b>Counter</b> {bias.counter}</p>
+    <p class="src">
+      {bias.sourceUrl ? <a href={bias.sourceUrl} target="_blank" rel="noopener">{bias.source}</a> : bias.source}
+    </p>
+  </div>
+</details>
+
+<style>
+  .card {
+    border: 1px solid var(--color-rule);
+    border-left: 4px solid var(--edge);
+    border-radius: 10px;
+    background: #fff;
+    margin: 11px 0;
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 17px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .no {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--color-taupe);
+    letter-spacing: 0.06em;
+    padding-top: 22px;
+    min-width: 44px;
+  }
+  .sum-main {
+    flex: 1;
+  }
+  .fam {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--edge);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .name {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.35rem;
+    line-height: 1.1;
+  }
+  .hook {
+    display: block;
+    margin-top: 4px;
+    color: #4a423b;
+    font-size: 1.02rem;
+  }
+  .plus {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    color: var(--color-taupe);
+    transition: transform 0.2s ease;
+    line-height: 1;
+    padding-top: 4px;
+  }
+  details[open] .plus {
+    transform: rotate(45deg);
+  }
+  .body {
+    padding: 0 20px 22px 80px;
+  }
+  .ask {
+    background: var(--color-paper-2);
+    border-left: 2px solid var(--edge);
+    border-radius: 0 6px 6px 0;
+    padding: 11px 13px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #4a423b;
+    margin: 0 0 14px;
+  }
+  .ask-label {
+    display: block;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-taupe);
+    margin-bottom: 5px;
+  }
+  .def {
+    margin: 0 0 12px;
+  }
+  .row {
+    margin: 8px 0;
+    font-size: 0.98rem;
+  }
+  .row b {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-taupe);
+    margin-right: 8px;
+  }
+  .src {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-rule);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--color-taupe);
+  }
+  .src a {
+    color: var(--color-taupe);
+  }
+  @media (max-width: 560px) {
+    .body {
+      padding-left: 20px;
+    }
+    .no {
+      padding-top: 24px;
+      min-width: 38px;
+    }
+  }
+</style>

@@ -1,0 +1,8 @@
+dist
+node_modules
+.astro
+.wrangler
+supporting-docs
+placeholder
+style-tile
+package-lock.json

@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="About — Irrational"
+  description="Why Irrational exists: a frontier model already knows the biases; the value is being told no — adversarially, on demand, and inside your other tools."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">About</p>
+      <h1>An engine for telling you no.</h1>
+      <p class="lede">
+        The web is full of bias <em>encyclopaedias</em> you browse and a few <em>practices</em> you'd have to
+        remember to do. Almost nothing takes the decision you're actually facing and adversarially audits it.
+        That's the gap Irrational fills.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap prose">
+    <h2>Why not just ask an LLM?</h2>
+    <p>
+      A frontier model already knows the 188 biases better than any catalogue. So the value isn't
+      <em>informational</em> — it's behavioural. A plain LLM in conversation is trained to agree and help you
+      execute your framing; it rarely, unprompted, tells you you're rationalising. Irrational's engine has a
+      <strong>fixed adversarial contract</strong> — assume you're biased, refuse to validate, argue the other
+      side — that doesn't drift back to helpfulness. And because it's a tool, it can be invoked
+      <strong>systematically</strong> (an agent auditing its own draft) rather than only when you remember to.
+    </p>
+    <p>
+      The evidence backs the stance: research finds current LLMs "passively confirm rather than challenge,
+      reinforcing cognitive bias," and that adversarial questioning is the single most effective debiasing
+      intervention.
+    </p>
+
+    <h2>The canon</h2>
+    <p>
+      Every entry is grounded in the foundational work: Kahneman &amp; Tversky's heuristics-and-biases programme
+      and prospect theory (<em>Thinking, Fast and Slow</em>); Thaler &amp; Sunstein on choice architecture
+      (<em>Nudge</em>); Dan Ariely (<em>Predictably Irrational</em> — this project's namesake); and Cialdini on
+      influence. Every claim is cited on the <a href="/sources">sources</a> page.
+    </p>
+
+    <h2>The shape</h2>
+    <p>
+      Irrational runs <strong>no AI model</strong>. It provides the curated adversarial framework, the
+      <a href="/biases">22-bias catalogue</a>, and a stateless scaffold — delivered as a public field guide and an
+      open <a href="/mcp">MCP</a> tool — and the reasoning is done by whatever model you or your agent already
+      have. No API keys. No stored decisions. Nothing leaves you. That's the <a href="/privacy">privacy</a>
+      story, and the moat: open, composable, and private in a way a closed SaaS can't be.
+    </p>
+    <p>Open-source — <a href="https://github.com/urbanmorph/irrational" target="_blank" rel="noopener">fork it on GitHub</a>.</p>
+  </section>
+</Layout>

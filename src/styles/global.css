@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* ── Design tokens (from supporting-docs/design-language.md) ───────────────── */
+@theme {
+  --color-paper: #f4efe6;
+  --color-paper-2: #ebe4d7;
+  --color-ink: #1a1a18;
+  --color-ink-2: #242422;
+  --color-taupe: #8a7f73;
+  --color-taupe-ink: #9c9086;
+  --color-rule: #d9cfc0;
+  --color-rule-ink: #3a332c;
+  --color-vermilion: #e2452c;
+
+  --color-s1: #e2452c;
+  --color-s2: #e8a13c;
+  --color-s3: #e9d24a;
+  --color-s4: #5bbf7a;
+  --color-s5: #4aa6e0;
+  --color-s6: #8a6fd0;
+
+  --color-fam-tmi: #4aa6e0;
+  --color-fam-meaning: #5bbf7a;
+  --color-fam-act: #e2452c;
+  --color-fam-remember: #8a6fd0;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+/* paper grain */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+.above {
+  position: relative;
+  z-index: 2;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin: 0;
+}
+a {
+  color: inherit;
+}
+
+/* ── Reusable ──────────────────────────────────────────────────────────────── */
+.wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.mono {
+  font-family: var(--font-mono);
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-taupe);
+}
+.spectrum-rule {
+  height: 2px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-s1),
+    var(--color-s2),
+    var(--color-s3),
+    var(--color-s4),
+    var(--color-s5),
+    var(--color-s6)
+  );
+}
+
+/* shared page scaffolding */
+.page-head {
+  padding: 64px 0 10px;
+}
+.page-head h1 {
+  font-size: clamp(2.1rem, 5vw, 3.3rem);
+  margin-top: 12px;
+  line-height: 1.04;
+}
+.lede {
+  margin-top: 16px;
+  max-width: 56ch;
+  color: #4a423b;
+  font-size: 1.14rem;
+  line-height: 1.55;
+}
+.lede em {
+  font-style: italic;
+}
+.prose {
+  max-width: 65ch;
+  padding-bottom: 10px;
+}
+.prose p {
+  margin: 0 0 18px;
+}
+.prose h2 {
+  font-size: 1.45rem;
+  margin: 38px 0 12px;
+}
+.prose a,
+.inline-link {
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-rule);
+  text-decoration: none;
+}
+.prose a:hover,
+.inline-link:hover {
+  color: var(--color-vermilion);
+}
+.prose code,
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--color-paper-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

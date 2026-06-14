@@ -1,0 +1,150 @@
+---
+import { FAMILIES } from '../data/biases';
+import type { WorkedExample } from '../data/examples';
+
+interface Props {
+  ex: WorkedExample;
+  active?: boolean;
+}
+const { ex, active = false } = Astro.props;
+---
+
+<article class="readout" data-readout data-id={ex.id} hidden={!active}>
+  <div class="call">
+    <div class="k">The call</div>
+    <p>{ex.call}</p>
+    <span class="chip">confidence {ex.confidence} · top bias: {ex.topBias}</span>
+  </div>
+
+  <div class="sk">The audit</div>
+  {
+    ex.biases.map((b) => (
+      <div class="bli">
+        <span class="d" style={`background:${FAMILIES[b.family].color}`} />
+        <span>
+          <b>{b.name}</b> — {b.evidence}
+        </span>
+      </div>
+    ))
+  }
+  <div class="bli">
+    <span class="d" style="background:var(--color-taupe-ink)"></span>
+    <span><b>Premortem.</b> {ex.premortem}</span>
+  </div>
+
+  <div class="sk">Sit with this</div>
+  <ul class="qs">{ex.questions.map((q) => <li>{q}</li>)}</ul>
+
+  <div class="recal">
+    <div class="k k-muted">The recalibration</div>
+    <p class="rbody">{ex.recalibration}</p>
+    <p class="conf">{ex.confidenceLine}</p>
+  </div>
+</article>
+
+<style>
+  .readout {
+    background: var(--color-ink-2);
+    border: 1px solid var(--color-rule-ink);
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 800px;
+    box-shadow: 0 22px 50px -28px rgba(26, 23, 20, 0.55);
+  }
+  .readout[hidden] {
+    display: none;
+  }
+  .call {
+    border-left: 3px solid var(--color-vermilion);
+    padding-left: 18px;
+  }
+  .k {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-vermilion);
+  }
+  .k-muted {
+    color: var(--color-taupe-ink);
+  }
+  .call p {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.3;
+    margin: 8px 0 0;
+    color: #fff;
+  }
+  .chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    background: rgba(226, 69, 44, 0.16);
+    color: #ffb3a4;
+    border: 1px solid rgba(226, 69, 44, 0.4);
+    border-radius: 5px;
+    padding: 4px 9px;
+    margin-top: 13px;
+  }
+  .sk {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-taupe-ink);
+    margin: 24px 0 11px;
+  }
+  .bli {
+    display: flex;
+    gap: 11px;
+    align-items: baseline;
+    margin: 9px 0;
+    color: #e6ded3;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .bli .d {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex: none;
+    transform: translateY(3px);
+  }
+  .bli b {
+    color: #fff;
+  }
+  .qs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .qs li {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #d8cfc5;
+    padding: 6px 0 6px 17px;
+    position: relative;
+  }
+  .qs li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--color-vermilion);
+  }
+  .recal {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-rule-ink);
+  }
+  .rbody {
+    color: #e6ded3;
+    margin: 8px 0 0;
+  }
+  .conf {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: #cfc6bb;
+  }
+</style>

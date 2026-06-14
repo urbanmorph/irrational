@@ -1,0 +1,66 @@
+---
+const links: [string, string][] = [
+  ['biases', '/biases'],
+  ['engine', '/#engine'],
+  ['mcp', '/mcp'],
+  ['about', '/about'],
+];
+const repo = 'https://github.com/urbanmorph/irrational';
+---
+
+<nav class="above site-nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand">Irrational</a>
+    <div class="nav-links">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+      <a class="star" href={repo} target="_blank" rel="noopener">★ GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .site-nav {
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    opacity: 0.72;
+  }
+  .nav-links a:hover {
+    opacity: 1;
+    color: var(--color-vermilion);
+  }
+  .star {
+    border: 1px solid var(--color-rule);
+    border-radius: 5px;
+    padding: 5px 9px;
+    opacity: 0.85 !important;
+  }
+  @media (max-width: 640px) {
+    .nav-links {
+      gap: 14px;
+    }
+  }
+</style>

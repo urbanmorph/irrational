@@ -1,0 +1,19 @@
+# Local working docs, notes, and design specs — not part of the shipped project
+supporting-docs/
+
+# Secrets / local env — never commit
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+
+# Node / Astro / build
+node_modules/
+dist/
+.astro/
+.wrangler/
+*.log
+
+# proof artifacts (not the app)
+placeholder/
+style-tile/
