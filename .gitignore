@@ -17,3 +17,6 @@ dist/
 # proof artifacts (not the app)
 placeholder/
 style-tile/
+
+# MCP publisher local credentials — never commit
+.mcpregistry_*
