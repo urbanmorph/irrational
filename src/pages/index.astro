@@ -26,7 +26,7 @@ const heroBands: [string, string, string][] = [
           A field guide to the mistakes your mind makes — and an engine that
           <em>refracts your decision</em> into the biases bending it.
         </p>
-        <p class="label hl scroll-cue">↓ pick a decision below, watch it get audited</p>
+        <p class="label hl scroll-cue">↓ audit a decision below — free, in your own AI</p>
       </div>
 
       <div class="hero-right">
@@ -49,14 +49,31 @@ const heroBands: [string, string, string][] = [
     <hr class="spectrum-rule" />
   </section>
 
-  <!-- Warm-paper body: tabs, the audit response, and the forge all live here. -->
+  <!-- Warm-paper body. Primary action first (the bar), then the pre-built scenarios. -->
   <section class="engine" id="engine">
     <div class="wrap">
       <div class="eyebrow">
-        <span class="label">The engine — pick a decision, watch it get audited</span>
+        <span class="label">The engine</span>
         <span class="ln"></span>
       </div>
 
+      <h2 class="engine-h">Audit a decision you're facing.</h2>
+
+      <div class="forge">
+        <div class="searchbar">
+          <textarea id="forge-input" rows="2" placeholder="Type the decision you're weighing — and how you got to it…"></textarea>
+          <button id="copy-btn" class="search-btn">Audit →</button>
+        </div>
+        <p class="forge-sub">
+          <span id="forge-note">Assembles the adversarial prompt — it runs in your AI; we keep no model and store nothing.</span>
+          <span class="open-links">
+            <button data-ai="chatgpt" class="link-btn">Open in ChatGPT</button>
+            <button data-ai="claude" class="link-btn">Open in Claude</button>
+          </span>
+        </p>
+      </div>
+
+      <p class="or-label label">…or watch it work on a pre-built scenario</p>
       <div class="tabs" role="tablist">
         {
           EXAMPLES.map((ex, i) => (
@@ -66,7 +83,6 @@ const heroBands: [string, string, string][] = [
           ))
         }
       </div>
-
       <div class="readouts">
         {EXAMPLES.map((ex, i) => <AuditCard ex={ex} active={i === 0} />)}
       </div>
@@ -74,17 +90,6 @@ const heroBands: [string, string, string][] = [
       <p class="more">
         Verdict-first, every bias tied to the words you wrote. <a href="/biases">Browse all 22 biases →</a>
       </p>
-
-      <div class="forge">
-        <label class="label forge-label" for="forge-input">Or audit your own decision</label>
-        <textarea id="forge-input" rows="2" placeholder="Describe a decision and how you got to it…"></textarea>
-        <div class="forge-actions">
-          <button id="copy-btn" class="fbtn primary">Copy prompt</button>
-          <button data-ai="chatgpt" class="fbtn">Open in ChatGPT</button>
-          <button data-ai="claude" class="fbtn">Open in Claude</button>
-        </div>
-        <p class="label fineprint" id="forge-note">Runs in your AI — we keep no model and store nothing.</p>
-      </div>
     </div>
   </section>
 </Layout>
@@ -102,7 +107,7 @@ const heroBands: [string, string, string][] = [
         r.hidden = !show;
         if (show) {
           r.classList.remove('flash');
-          void r.offsetWidth; // restart the flash animation
+          void r.offsetWidth;
           r.classList.add('flash');
         }
       });
@@ -111,6 +116,7 @@ const heroBands: [string, string, string][] = [
 
   const input = document.getElementById('forge-input');
   const note = document.getElementById('forge-note');
+  const DEFAULT_NOTE = note ? note.textContent : '';
   const buildPrompt = () => {
     const t = (input && input.value ? input.value : '').trim();
     return (
@@ -127,7 +133,11 @@ const heroBands: [string, string, string][] = [
     try {
       await navigator.clipboard.writeText(buildPrompt());
       copyBtn.textContent = 'Copied ✓';
-      setTimeout(() => (copyBtn.textContent = 'Copy prompt'), 1600);
+      if (note) note.textContent = 'Prompt copied — paste it into ChatGPT, Claude, or any AI.';
+      setTimeout(() => {
+        copyBtn.textContent = 'Audit →';
+        if (note) note.textContent = DEFAULT_NOTE;
+      }, 2400);
     } catch {
       copyBtn.textContent = 'Copy failed';
     }
@@ -244,7 +254,7 @@ const heroBands: [string, string, string][] = [
     white-space: nowrap;
   }
 
-  /* ── Engine: warm-paper body (tabs · response · forge) ────────────────────── */
+  /* ── Engine: warm-paper body ──────────────────────────────────────────────── */
   .engine {
     background: var(--color-paper);
     color: var(--color-ink);
@@ -254,7 +264,7 @@ const heroBands: [string, string, string][] = [
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
   .eyebrow .ln {
     flex: 1;
@@ -264,8 +274,102 @@ const heroBands: [string, string, string][] = [
   .engine .label {
     color: var(--color-taupe);
   }
+  .engine-h {
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    margin: 0 0 20px;
+  }
 
-  /* tabs sit directly on top of the (light) audit panel */
+  /* the prominent "search bar" — the primary action */
+  .forge {
+    max-width: 760px;
+  }
+  .searchbar {
+    display: flex;
+    align-items: stretch;
+    background: #fff;
+    border: 1px solid var(--color-rule);
+    border-radius: 14px;
+    box-shadow: 0 16px 38px -22px rgba(26, 23, 20, 0.32);
+    overflow: hidden;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .searchbar:focus-within {
+    border-color: var(--color-ink);
+    box-shadow: 0 18px 40px -18px rgba(26, 23, 20, 0.42);
+  }
+  .searchbar textarea {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.12rem;
+    line-height: 1.4;
+    padding: 17px 20px;
+    resize: none;
+    min-height: 62px;
+  }
+  .searchbar textarea:focus {
+    outline: none;
+  }
+  .searchbar textarea::placeholder {
+    color: var(--color-taupe);
+  }
+  .search-btn {
+    flex: none;
+    align-self: stretch;
+    border: 0;
+    background: var(--color-vermilion);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .search-btn:hover {
+    background: #c5391f;
+  }
+  .forge-sub {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 12px 2px 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-taupe);
+    line-height: 1.5;
+  }
+  .open-links {
+    display: flex;
+    gap: 16px;
+    flex: none;
+  }
+  .link-btn {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink);
+    opacity: 0.82;
+    border-bottom: 1px solid var(--color-rule);
+    padding: 0 0 2px;
+    white-space: nowrap;
+  }
+  .link-btn:hover {
+    color: var(--color-vermilion);
+    opacity: 1;
+  }
+
+  /* secondary: scenario tabs on the audit panel */
+  .or-label {
+    margin: 36px 0 12px;
+    color: var(--color-taupe);
+  }
   .tabs {
     display: flex;
     flex-wrap: wrap;
@@ -291,7 +395,6 @@ const heroBands: [string, string, string][] = [
     color: #fff;
     border-color: var(--color-vermilion);
   }
-
   .more {
     margin-top: 22px;
     font-family: var(--font-mono);
@@ -307,61 +410,6 @@ const heroBands: [string, string, string][] = [
     color: var(--color-vermilion);
   }
 
-  /* forge — light, in the paper body */
-  .forge {
-    margin-top: 34px;
-    padding-top: 30px;
-    border-top: 1px solid var(--color-rule);
-    max-width: 580px;
-  }
-  .forge-label {
-    display: block;
-    margin-bottom: 10px;
-    color: var(--color-taupe);
-  }
-  .forge textarea {
-    width: 100%;
-    background: #fff;
-    border: 1px solid var(--color-rule);
-    border-radius: 8px;
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 12px 14px;
-    resize: vertical;
-  }
-  .forge textarea::placeholder {
-    color: var(--color-taupe);
-  }
-  .forge-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .fbtn {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    background: #fff;
-    color: var(--color-ink);
-    border: 1px solid var(--color-rule);
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  .fbtn:hover {
-    border-color: var(--color-taupe);
-  }
-  .fbtn.primary {
-    background: var(--color-vermilion);
-    color: #fff;
-    border-color: var(--color-vermilion);
-  }
-  .fineprint {
-    margin-top: 11px;
-    color: var(--color-taupe);
-  }
-
   @media (max-width: 820px) {
     .hero-grid {
       grid-template-columns: 1fr;
@@ -371,6 +419,12 @@ const heroBands: [string, string, string][] = [
     .hero-right {
       order: -1;
       justify-content: flex-start;
+    }
+  }
+  @media (max-width: 560px) {
+    .forge-sub {
+      flex-direction: column;
+      gap: 8px;
     }
   }
 </style>
