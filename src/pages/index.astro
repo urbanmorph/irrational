@@ -5,6 +5,35 @@ import { EXAMPLES } from '../data/examples';
 import { forgePrefix } from '../engine/scaffold';
 
 const prefix = forgePrefix('forward');
+
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://irrational.pages.dev/#website',
+      name: 'Irrational',
+      url: 'https://irrational.pages.dev',
+      description: 'An open, adversarial behavioural-bias engine and field guide.',
+      publisher: { '@id': 'https://urbanmorph.com/#org' },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': 'https://irrational.pages.dev/#app',
+      name: 'Irrational',
+      url: 'https://irrational.pages.dev',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Any',
+      description:
+        'Audits a decision for cognitive biases: names the biases distorting your reasoning, applies the outside view and a premortem, and returns a recalibrated, verdict-first judgment. Runs no model — your own AI or MCP agent does the reasoning.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      isAccessibleForFree: true,
+      license: 'https://github.com/urbanmorph/irrational/blob/main/LICENSE',
+      codeRepository: 'https://github.com/urbanmorph/irrational',
+    },
+  ],
+};
+
 const heroBands: [string, string, string][] = [
   ['sunk cost', '--color-s1', '64%'],
   ['overconfidence', '--color-s2', '48%'],
@@ -16,6 +45,8 @@ const heroBands: [string, string, string][] = [
 ---
 
 <Layout>
+  <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+
   <!-- The only dark/ink section. -->
   <section class="hero">
     <div class="wrap hero-grid">

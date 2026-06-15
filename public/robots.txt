@@ -1,0 +1,15 @@
+# Irrational — open, public, and happy to be read by humans, search crawlers, and AI.
+User-agent: *
+Allow: /
+
+# AI answer engines are explicitly welcome — the catalogue is meant to be cited.
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://irrational.pages.dev/sitemap-index.xml

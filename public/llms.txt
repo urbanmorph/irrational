@@ -1,0 +1,43 @@
+# Irrational
+
+> An open, adversarial behavioural-bias engine. It audits a decision the way a disciplined
+> skeptic would — spotting whether fast intuition made the call, naming the specific cognitive
+> biases distorting it (each tied to your own words), and forcing the slow, deliberate check
+> before you trust it. It runs no AI model of its own: the reasoning is done by your own AI or
+> agent, via the web or an open MCP endpoint. No accounts, no keys, nothing stored.
+
+Built by Urban Morph. Open-source (MIT) at https://github.com/urbanmorph/irrational.
+
+## What it is
+
+- A **field guide** to 22 cognitive biases, grouped by Buster Benson's four problems the brain
+  solves (too much information; not enough meaning; need to act fast; what we remember). Each
+  entry has a plain-language hook, a definition, an example, the debiasing counter-move, the
+  adversarial question it implies, and a verified primary-source citation.
+- An **engine** (the adversarial contract + procedure) that any model executes to produce a
+  verdict-first audit: the call, the biases with evidence, the outside view, a premortem,
+  sharp questions, and a recalibrated judgment with a defensible confidence level.
+- Available as a **web app** and an open **MCP** tool, so agents can audit their own reasoning.
+
+## The 22 biases
+
+Too much information: anchoring, availability, confirmation, survivorship, framing.
+Not enough meaning: representativeness / base-rate neglect, WYSIATI, halo, narrative fallacy,
+authority, bandwagon / social proof.
+Need to act fast: overconfidence, loss aversion, sunk cost, planning fallacy, status quo,
+optimism.
+What we remember & how we judge what happened: hindsight, outcome, self-serving / attribution,
+recency, peak–end.
+
+## Key pages
+
+- [Field guide](https://irrational.pages.dev/biases): all 22 biases with definitions and citations.
+- [Sources](https://irrational.pages.dev/sources): every citation, verified.
+- [Connect via MCP](https://irrational.pages.dev/mcp): the `analyze_decision`, `list_biases`,
+  `get_bias` tools; endpoint at https://irrational.pages.dev/mcp/server.
+- [Printable audit](https://irrational.pages.dev/checklist): the method on one pen-and-paper page.
+- [About](https://irrational.pages.dev/about) · [Privacy](https://irrational.pages.dev/privacy)
+
+## How to cite
+
+Irrational, a behavioural-bias engine and field guide by Urban Morph. https://irrational.pages.dev

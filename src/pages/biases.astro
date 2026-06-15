@@ -5,12 +5,34 @@ import { BIASES, FAMILIES, type Family } from '../data/biases';
 
 const families = Object.keys(FAMILIES) as Family[];
 const indexed = BIASES.map((bias, i) => ({ bias, i }));
+
+// AEO/SEO: expose the catalogue as a structured glossary so search and AI answer engines
+// can cite individual biases with their definitions and sources.
+const glossarySchema = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': 'https://irrational.pages.dev/biases#catalogue',
+  name: 'Irrational — the 22-bias field guide',
+  description:
+    'A curated catalogue of 22 cognitive biases that distort decisions, each with a definition, an example, the debiasing counter-move, and a verified primary-source citation.',
+  url: 'https://irrational.pages.dev/biases',
+  hasDefinedTerm: BIASES.map((b) => ({
+    '@type': 'DefinedTerm',
+    '@id': `https://irrational.pages.dev/biases#${b.id}`,
+    name: b.name,
+    description: b.definition,
+    inDefinedTermSet: 'https://irrational.pages.dev/biases#catalogue',
+    termCode: b.id,
+  })),
+};
 ---
 
 <Layout
   title="The Field Guide — Irrational"
   description="A specimen catalogue of 22 cognitive biases, grouped by Buster Benson's four problems the brain solves — each with the question that breaks its spell, and a verified citation."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(glossarySchema)} />
+
   <section class="fg-head">
     <div class="wrap">
       <p class="label">The Field Guide</p>

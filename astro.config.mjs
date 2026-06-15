@@ -1,14 +1,15 @@
 import { defineConfig, passthroughImageService } from "astro/config";
-import cloudflare from "@astrojs/cloudflare";
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
-// Static-first. Pages prerender by default; the MCP endpoint (src/pages/mcp/server.ts)
-// opts into on-demand rendering (prerender = false) and the Cloudflare adapter compiles
-// it into the deployed worker. passthroughImageService() avoids the native `sharp` dep.
+// Pure static site — no SSR adapter. Every page prerenders to static HTML served straight
+// from Cloudflare's CDN (so the Web Analytics beacon auto-injects, and there's no whole-site
+// Worker). The only dynamic route, the MCP endpoint, is a native Cloudflare Pages Function at
+// functions/mcp/server.ts. passthroughImageService() avoids the native `sharp` dependency.
 export default defineConfig({
   site: "https://irrational.pages.dev",
   output: "static",
-  adapter: cloudflare(),
+  integrations: [sitemap()],
   image: { service: passthroughImageService() },
   vite: { plugins: [tailwindcss()] },
 });

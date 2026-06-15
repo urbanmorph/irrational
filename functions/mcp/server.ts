@@ -1,9 +1,7 @@
-import type { APIRoute } from "astro";
-import { handleMcp, type JsonRpcRequest } from "../../mcp/handler";
-
-// The stateless MCP JSON-RPC endpoint. On-demand (not prerendered); the rest of the site
-// is static. The HTTP layer is thin — all logic is the tested handleMcp().
-export const prerender = false;
+// Cloudflare Pages Function — the stateless MCP JSON-RPC endpoint at /mcp/server.
+// All logic is the tested handleMcp(); this is just the HTTP layer. Living here (instead of
+// an Astro SSR route) keeps the rest of the site pure-static.
+import { handleMcp, type JsonRpcRequest } from "../../src/mcp/handler";
 
 const CORS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
@@ -18,10 +16,10 @@ const json = (data: unknown, status = 200) =>
     headers: { "Content-Type": "application/json", ...CORS },
   });
 
-export const OPTIONS: APIRoute = () =>
+export const onRequestOptions = () =>
   new Response(null, { status: 204, headers: CORS });
 
-export const GET: APIRoute = () =>
+export const onRequestGet = () =>
   json({
     name: "irrational",
     version: "0.1.0",
@@ -30,7 +28,7 @@ export const GET: APIRoute = () =>
     docs: "https://irrational.pages.dev/mcp",
   });
 
-export const POST: APIRoute = async ({ request }) => {
+export const onRequestPost: PagesFunction = async ({ request }) => {
   let body: unknown;
   try {
     body = await request.json();

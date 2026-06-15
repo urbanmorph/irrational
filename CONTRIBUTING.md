@@ -9,7 +9,7 @@ don't overstate confidence.**
 
 ## Translate the field guide or the printable checklist
 
-The audit already *answers* in any language (the engine instructs the user's own model — see
+The audit already _answers_ in any language (the engine instructs the user's own model — see
 the "Reply in" picker and the MCP `language` param). What isn't translated yet is the
 **catalogue UI itself** and the **printable checklist** (`/checklist`). That's the open
 invitation.
@@ -20,7 +20,7 @@ To contribute a translation:
    `definition`, `example`, `counter`, and `ask` are the translatable prose.
 2. **Keep the bias `id` and `family` keys exactly as they are** (canonical English) — they're
    how the web and the MCP stay parseable across languages. Translate only the prose.
-3. You are the native review. Translate the bias *terminology* faithfully; where a term has
+3. You are the native review. Translate the bias _terminology_ faithfully; where a term has
    no clean equivalent, keep the English term and gloss it rather than inventing one.
 4. For the checklist, copy [`src/pages/checklist.astro`](src/pages/checklist.astro) to a
    locale variant (e.g. `checklist.hi.astro`) and translate the visible strings.
