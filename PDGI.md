@@ -30,7 +30,7 @@ Evidence: [LICENSE](./LICENSE), [`src/data/biases.ts`](src/data/biases.ts), [/so
 
 ### Privacy — ✅
 
-We run no AI model and keep no data. Pre-built audits are generated at build time; your own decision is assembled into a prompt in your browser and handed to your AI, never to us; the MCP returns a stateless scaffold and logs no input. No account, no email, no keys. Analytics are cookie-free and aggregate only.
+We run no AI model and keep no data. The worked-example audits are hand-written and rendered statically; your own decision is assembled into a prompt in your browser and handed to your AI, never to us; the MCP returns a stateless scaffold and logs no input. No account, no email, no keys. Analytics are Cloudflare Web Analytics only — cookie-free, no personal data, aggregate page counts.
 Evidence: [/privacy](https://irrational.pages.dev/privacy) ("we run no AI and keep no data").
 
 ### Humans in the loop (AI does not cut people out) — ✅
