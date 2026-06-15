@@ -56,7 +56,14 @@ const build: [string, string][] = [
   </div>
 
   <div class="wrap foot-legal">
-    <span class="label">Open-source under the MIT licence</span>
+    <span class="label"
+      >Open-source (MIT) · <a
+        class="legal-link"
+        href="https://github.com/urbanmorph/irrational/blob/main/PDGI.md"
+        target="_blank"
+        rel="noopener">follows PDGI ↗</a
+      ></span
+    >
     <a class="label repo-link" href={repo} target="_blank" rel="noopener">github.com/urbanmorph/irrational ↗</a>
   </div>
 </footer>
@@ -151,10 +158,16 @@ const build: [string, string][] = [
     padding: 20px 0 52px;
     border-top: 1px solid var(--color-rule);
   }
-  .repo-link {
+  .repo-link,
+  .legal-link {
     text-decoration: none;
   }
-  .repo-link:hover {
+  .legal-link {
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .repo-link:hover,
+  .legal-link:hover {
     color: var(--color-vermilion);
   }
 
