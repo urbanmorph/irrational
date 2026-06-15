@@ -40,8 +40,9 @@ Evidence: [/about](https://irrational.pages.dev/about), the contract and procedu
 
 ### Platform cooperativism — 🟡
 
-Irrational is a tool and a curated commons, not a contribution platform: the catalogue is editorially curated rather than community-submitted, so there is no anonymous-publish path like bharatlas's. It is fully open to forks and pull requests, though.
-Direction: invite community contributions through the repo — proposed biases, worked examples, and especially translations — with the same "cite the source, mark the gaps" discipline as the curated set.
+Irrational is a tool and a curated commons, not an anonymous-publish platform like bharatlas's. But the contribution path is now open and explicit: a [CONTRIBUTING](./CONTRIBUTING.md) guide invites translations, proposed biases, and worked examples through the repo, with the same "cite the source, mark the gaps" discipline as the curated set.
+Evidence: [CONTRIBUTING.md](./CONTRIBUTING.md), the public repo and PR/CI gate.
+Direction: still 🟡 until the first community contributions land; promote to ✅ once the catalogue is genuinely co-built (e.g. the first contributed translation).
 
 ### A non-digital alternative must exist — ✅
 
@@ -53,7 +54,7 @@ Direction: add a downloadable copy of the full catalogue as files for fully-offl
 
 The audit now answers in the user's language. The bring-your-own-model design makes this nearly free: the scaffold instructs the user's AI to write the whole audit in any language while keeping bias ids canonical, so the result is still parseable. The web forge offers the 12 major scheduled Indian languages (auto-detecting the browser's) plus others, and the MCP `analyze_decision` tool takes a `language` parameter — no translation files, every language works on day one.
 Evidence: the language control on [the home forge](https://irrational.pages.dev/), the `language` param on [/mcp](https://irrational.pages.dev/mcp), `languageLine()` in [`src/engine/scaffold.ts`](src/engine/scaffold.ts).
-Direction: still English-first for the catalogue UI itself; the next step is community-contributed translations of the field guide and the printable checklist (which also advances platform cooperativism).
+Direction: the catalogue UI and printable checklist are still English-first, but translating them is now an open, documented contribution path — see [CONTRIBUTING.md](./CONTRIBUTING.md) (which also advances platform cooperativism). Promote to ✅ when the field guide ships in a second language.
 
 ### Algorithmic fairness — mostly not applicable
 

@@ -1,11 +1,61 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const title = 'About — Irrational';
+const description =
+  'Why Irrational exists: a frontier model already knows the biases; the value is being told no — adversarially, on demand, and inside your other tools.';
+
+// Structured data — mirrors the family (mdshare/bharatlas). The org avatar is used here,
+// as the Person image, not as a rendered headshot.
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://www.sathyasankaran.com/#person',
+      name: 'Sathya Sankaran',
+      url: 'https://www.sathyasankaran.com',
+      image: 'https://github.com/urbanmorph.png',
+      sameAs: ['https://www.linkedin.com/in/sathyasankaran/', 'https://github.com/urbanmorph'],
+      jobTitle: 'Director',
+      worksFor: { '@id': 'https://urbanmorph.com/#org' },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://urbanmorph.com/#org',
+      name: 'Urban Morph',
+      description: 'Consulting firm building tools to solve mobility in cities.',
+      url: 'https://urbanmorph.com',
+      logo: 'https://github.com/urbanmorph.png',
+      founder: { '@id': 'https://www.sathyasankaran.com/#person' },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': 'https://irrational.pages.dev/#app',
+      name: 'Irrational',
+      url: 'https://irrational.pages.dev',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      creator: { '@id': 'https://www.sathyasankaran.com/#person' },
+      license: 'https://github.com/urbanmorph/irrational/blob/main/LICENSE',
+      codeRepository: 'https://github.com/urbanmorph/irrational',
+    },
+    {
+      '@type': 'AboutPage',
+      url: 'https://irrational.pages.dev/about',
+      name: title,
+      description: description,
+      mainEntity: { '@id': 'https://irrational.pages.dev/#app' },
+      author: { '@id': 'https://www.sathyasankaran.com/#person' },
+    },
+  ],
+};
 ---
 
-<Layout
-  title="About — Irrational"
-  description="Why Irrational exists: a frontier model already knows the biases; the value is being told no — adversarially, on demand, and inside your other tools."
->
+<Layout title={title} description={description}>
+  <script type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
+
   <section class="page-head">
     <div class="wrap">
       <p class="label">About</p>
@@ -34,6 +84,21 @@ import Layout from '../layouts/Layout.astro';
       intervention.
     </p>
 
+    <h2>Why I built this</h2>
+    <p>
+      I'm <a href="https://www.sathyasankaran.com" target="_blank" rel="noopener">Sathya</a>, a director at
+      <a href="https://www.urbanmorph.com" target="_blank" rel="noopener">Urban Morph</a>, where we build tools to
+      solve mobility in cities. I kept noticing the same thing: people stop thinking critically the moment an LLM
+      hands them a decision.
+    </p>
+    <p>
+      The behavioural biases that should catch those mistakes mostly live in books — they're not cognitively
+      convenient, and most of us don't even know <em>where</em> or <em>when</em> to apply them. So instead of
+      writing one more thing to read, I put the check in the place those self-reinforcing biases are now most
+      prevalent: <strong>inside the LLM tools themselves</strong> — where the decisions are increasingly made, and
+      where an agreeable model is least likely to push back.
+    </p>
+
     <h2>The canon</h2>
     <p>
       Every entry is grounded in the foundational work: Kahneman &amp; Tversky's heuristics-and-biases programme
@@ -50,6 +115,31 @@ import Layout from '../layouts/Layout.astro';
       have. No API keys. No stored decisions. Nothing leaves you. That's the <a href="/privacy">privacy</a>
       story, and the moat: open, composable, and private in a way a closed SaaS can't be.
     </p>
-    <p>Open-source — <a href="https://github.com/urbanmorph/irrational" target="_blank" rel="noopener">fork it on GitHub</a>.</p>
+    <p>
+      Open-source — <a href="https://github.com/urbanmorph/irrational" target="_blank" rel="noopener"
+        >fork it on GitHub</a
+      >.
+    </p>
+
+    <p class="disclaimer">
+      <strong>Disclaimer.</strong> Irrational is a thinking aid, not professional advice. It is adversarial by design,
+      can be wrong, and does not replace legal, financial, medical, or other expert counsel. The audit is produced by
+      <em>your</em> own AI, whose output is your responsibility — for high-stakes decisions, verify with a qualified
+      professional before you act.
+    </p>
   </section>
 </Layout>
+
+<style>
+  .disclaimer {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-rule);
+    font-size: 0.9rem;
+    color: var(--color-taupe);
+    line-height: 1.55;
+  }
+  .disclaimer strong {
+    color: var(--color-ink);
+  }
+</style>
