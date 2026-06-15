@@ -1,81 +1,174 @@
 ---
 const repo = 'https://github.com/urbanmorph/irrational';
-const links: [string, string][] = [
+
+const explore: [string, string][] = [
   ['Field guide', '/biases'],
   ['The engine', '/#engine'],
-  ['Connect (MCP)', '/mcp'],
   ['About', '/about'],
-  ['Privacy', '/privacy'],
   ['Sources', '/sources'],
+];
+const build: [string, string][] = [
+  ['Connect via MCP', '/mcp'],
+  ['GitHub', repo],
+  ['Privacy', '/privacy'],
 ];
 ---
 
 <footer class="above site-footer">
   <hr class="spectrum-rule" />
-  <div class="wrap foot-inner">
+
+  <div class="wrap foot-cta">
+    <div>
+      <p class="cta-kick label">The engine, in your tools</p>
+      <p class="cta-line">Audit your decisions where you already work — wire it into Claude, Cursor, or any agent.</p>
+    </div>
+    <a class="cta-btn" href="/mcp">Use with your AI →</a>
+  </div>
+
+  <div class="wrap foot-cols">
     <div class="brand-col">
       <a href="/" class="foot-brand">Irrational</a>
-      <p class="label">Open-source · runs no model · stores nothing</p>
+      <p class="brand-desc">
+        An open, adversarial behavioural-bias engine. Your decisions, audited by your own AI — we run no model and
+        store nothing.
+      </p>
     </div>
-    <nav class="foot-nav" aria-label="Footer">
-      {links.map(([label, href]) => <a href={href}>{label}</a>)}
-      <a href={repo} target="_blank" rel="noopener">GitHub ↗</a>
+
+    <nav class="col" aria-label="Explore">
+      <p class="col-head label">Explore</p>
+      {explore.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+
+    <nav class="col" aria-label="Build">
+      <p class="col-head label">Build</p>
+      {
+        build.map(([label, href]) =>
+          href === repo ? (
+            <a href={href} target="_blank" rel="noopener">
+              {label} ↗
+            </a>
+          ) : (
+            <a href={href}>{label}</a>
+          ),
+        )
+      }
     </nav>
   </div>
-  <div class="wrap foot-bottom">
-    <span class="label">Fraunces · Newsreader · IBM Plex Mono</span>
-    <span class="label">MIT · 2026</span>
+
+  <div class="wrap foot-legal">
+    <span class="label">Open-source under the MIT licence</span>
+    <a class="label repo-link" href={repo} target="_blank" rel="noopener">github.com/urbanmorph/irrational ↗</a>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: 90px;
+    margin-top: 96px;
   }
-  .foot-inner {
+
+  /* CTA strip */
+  .foot-cta {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    gap: 30px;
+    gap: 24px;
     flex-wrap: wrap;
-    padding-top: 30px;
+    padding: 34px 0 30px;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .cta-kick {
+    margin: 0 0 7px;
+    color: var(--color-taupe);
+  }
+  .cta-line {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.22;
+    max-width: 32ch;
+  }
+  .cta-btn {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    background: var(--color-vermilion);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .cta-btn:hover {
+    background: #c5391f;
+  }
+
+  /* columns */
+  .foot-cols {
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr;
+    gap: 30px;
+    padding: 42px 0 36px;
   }
   .foot-brand {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 600;
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     text-decoration: none;
     display: block;
   }
-  .brand-col .label {
-    margin-top: 8px;
+  .brand-desc {
+    margin: 12px 0 0;
+    max-width: 38ch;
+    color: #4a423b;
+    font-size: 0.98rem;
+    line-height: 1.5;
   }
-  .foot-nav {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 9px 30px;
-    align-content: start;
+  .col-head {
+    margin: 0 0 12px;
+    color: var(--color-taupe);
   }
-  .foot-nav a {
+  .col a {
+    display: block;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.84rem;
     text-decoration: none;
-    opacity: 0.75;
+    color: var(--color-ink);
+    padding: 5px 0;
+    opacity: 0.82;
   }
-  .foot-nav a:hover {
+  .col a:hover {
     opacity: 1;
     color: var(--color-vermilion);
   }
-  .foot-bottom {
+
+  /* legal bar */
+  .foot-legal {
     display: flex;
     justify-content: space-between;
     gap: 12px;
     flex-wrap: wrap;
-    padding: 22px 0 48px;
+    padding: 20px 0 52px;
+    border-top: 1px solid var(--color-rule);
   }
-  @media (max-width: 560px) {
-    .foot-nav {
+  .repo-link {
+    text-decoration: none;
+  }
+  .repo-link:hover {
+    color: var(--color-vermilion);
+  }
+
+  @media (max-width: 720px) {
+    .foot-cols {
       grid-template-columns: 1fr 1fr;
+    }
+    .brand-col {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 440px) {
+    .foot-cols {
+      grid-template-columns: 1fr;
     }
   }
 </style>

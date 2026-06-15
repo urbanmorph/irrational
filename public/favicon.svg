@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Irrational">
+  <!-- Full-bleed square (no rounded corners) so the browser tab icon fills its slot
+       edge-to-edge with no transparent corners. Home-screen icons (apple-touch /
+       manifest) are also full-bleed and get rounded by iOS/Android themselves. -->
+  <rect width="64" height="64" fill="#1a1a18"/>
+  <rect x="27" y="27" width="10" height="24" rx="5" fill="#ffffff"/>
+  <circle cx="32" cy="16.5" r="5.5" fill="#e2452c"/>
+</svg>
