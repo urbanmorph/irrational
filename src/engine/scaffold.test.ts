@@ -57,6 +57,26 @@ describe("buildAuditDirective", () => {
     expect(i).toContain("system 1");
   });
 
+  it("adds a language instruction when a language is given, and keeps bias ids canonical", () => {
+    const r = buildAuditDirective({
+      judgment: "a",
+      reasoning: "b",
+      language: "Tamil",
+    });
+    if (r.status !== "audit") throw new Error("expected audit");
+    expect(r.instructions).toContain("Tamil");
+    const i = r.instructions.toLowerCase();
+    expect(i).toContain("respond");
+    // structured output must stay parseable: ids/keys not translated
+    expect(i).toContain("ids");
+  });
+
+  it("omits the language instruction when no language is given", () => {
+    const r = buildAuditDirective({ judgment: "a", reasoning: "b" });
+    if (r.status !== "audit") throw new Error("expected audit");
+    expect(r.instructions.toLowerCase()).not.toContain("respond entirely in");
+  });
+
   it("describes the composed output format", () => {
     expect(Object.keys(AUDIT_OUTPUT_SCHEMA)).toEqual(
       expect.arrayContaining([
@@ -81,5 +101,14 @@ describe("forgePrompt", () => {
     expect(p).toContain("Sell the stock");
     expect(p).toContain("down 40%");
     expect(p.toLowerCase()).toContain("adversarial");
+  });
+
+  it("carries the language instruction into the forge prompt", () => {
+    const p = forgePrompt({
+      judgment: "x",
+      reasoning: "y",
+      language: "Spanish",
+    });
+    expect(p).toContain("Spanish");
   });
 });

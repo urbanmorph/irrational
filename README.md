@@ -6,13 +6,13 @@
 
 Irrational **runs no AI model.** It provides the curated adversarial framework, a 22-bias catalogue, and a stateless scaffold — delivered as a public field guide and an open MCP tool — and the reasoning is done by whatever model you or your agent already have. **No API keys. No stored decisions. Nothing leaves you.**
 
-A frontier model already knows the biases, so the value isn't informational — it's behavioural: a plain LLM is trained to agree, while Irrational has a fixed adversarial contract (*assume you're biased, refuse to validate, argue the other side*) that an agent can invoke systematically — even on its own draft reasoning.
+A frontier model already knows the biases, so the value isn't informational — it's behavioural: a plain LLM is trained to agree, while Irrational has a fixed adversarial contract (_assume you're biased, refuse to validate, argue the other side_) that an agent can invoke systematically — even on its own draft reasoning.
 
 ## What's inside
 
 - **Field guide** — 22 cognitive biases grouped by Buster Benson's four problems the brain solves, each with the question that breaks its spell and a **verified citation**.
-- **The engine** — an MCP server exposing `analyze_decision`, `list_biases`, `get_bias`. `analyze_decision` returns a verdict-first *directive* your model executes. The discipline is ours; the reasoning is yours.
-- **The web forge** — type a decision; it assembles the adversarial prompt in your browser and hands off to *your* AI. No model runs here.
+- **The engine** — an MCP server exposing `analyze_decision`, `list_biases`, `get_bias`. `analyze_decision` returns a verdict-first _directive_ your model executes. The discipline is ours; the reasoning is yours.
+- **The web forge** — type a decision; it assembles the adversarial prompt in your browser and hands off to _your_ AI. No model runs here.
 
 ## Stack
 

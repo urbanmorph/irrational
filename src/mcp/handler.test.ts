@@ -41,6 +41,14 @@ describe("mcp handler", () => {
     expect(sc.candidateBiases).toHaveLength(BIASES.length);
   });
 
+  it("analyze_decision threads a language into the directive", () => {
+    const r = call("tools/call", {
+      name: "analyze_decision",
+      arguments: { judgment: "x", reasoning: "y", language: "Hindi" },
+    });
+    expect(result(r).structuredContent.instructions).toContain("Hindi");
+  });
+
   it("analyze_decision without reasoning asks for reasoning", () => {
     const r = call("tools/call", {
       name: "analyze_decision",

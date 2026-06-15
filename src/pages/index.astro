@@ -67,6 +67,32 @@ const heroBands: [string, string, string][] = [
         <p class="forge-sub">
           <span id="forge-note">Assembles the adversarial prompt — it runs in your AI; we keep no model and store nothing.</span>
           <span class="open-links">
+            <label class="lang-pick">
+              Reply in
+              <select id="forge-lang" aria-label="Language for the audit">
+                <option value="">English</option>
+                <optgroup label="Indian languages">
+                  <option value="Hindi">हिन्दी — Hindi</option>
+                  <option value="Bengali">বাংলা — Bengali</option>
+                  <option value="Marathi">मराठी — Marathi</option>
+                  <option value="Telugu">తెలుగు — Telugu</option>
+                  <option value="Tamil">தமிழ் — Tamil</option>
+                  <option value="Gujarati">ગુજરાતી — Gujarati</option>
+                  <option value="Urdu">اردو — Urdu</option>
+                  <option value="Kannada">ಕನ್ನಡ — Kannada</option>
+                  <option value="Odia">ଓଡ଼ିଆ — Odia</option>
+                  <option value="Malayalam">മലയാളം — Malayalam</option>
+                  <option value="Punjabi">ਪੰਜਾਬੀ — Punjabi</option>
+                  <option value="Assamese">অসমীয়া — Assamese</option>
+                </optgroup>
+                <optgroup label="Other">
+                  <option value="Spanish">Español</option>
+                  <option value="French">Français</option>
+                  <option value="Arabic">العربية</option>
+                  <option value="Mandarin Chinese">中文</option>
+                </optgroup>
+              </select>
+            </label>
             <button data-ai="chatgpt" class="link-btn">Open in ChatGPT</button>
             <button data-ai="claude" class="link-btn">Open in Claude</button>
           </span>
@@ -129,7 +155,42 @@ const heroBands: [string, string, string][] = [
 
   const input = document.getElementById('forge-input');
   const note = document.getElementById('forge-note');
+  const langSel = document.getElementById('forge-lang');
   const DEFAULT_NOTE = note ? note.textContent : '';
+
+  // Default the dropdown to the visitor's browser language, if we offer it.
+  if (langSel && navigator.language) {
+    const base = navigator.language.toLowerCase().split('-')[0];
+    const map = {
+      hi: 'Hindi',
+      bn: 'Bengali',
+      mr: 'Marathi',
+      te: 'Telugu',
+      ta: 'Tamil',
+      gu: 'Gujarati',
+      ur: 'Urdu',
+      kn: 'Kannada',
+      or: 'Odia',
+      ml: 'Malayalam',
+      pa: 'Punjabi',
+      as: 'Assamese',
+      es: 'Spanish',
+      fr: 'French',
+      ar: 'Arabic',
+      zh: 'Mandarin Chinese',
+    };
+    if (map[base]) langSel.value = map[base];
+  }
+
+  const languageLine = () => {
+    const lang = langSel && langSel.value ? langSel.value.trim() : '';
+    if (!lang) return '';
+    return (
+      `\n\nRespond entirely in ${lang}: write every section in ${lang}. ` +
+      'Keep the bias ids exactly as given (in English); translate only the prose.'
+    );
+  };
+
   const buildPrompt = () => {
     const t = (input && input.value ? input.value : '').trim();
     return (
@@ -137,7 +198,8 @@ const heroBands: [string, string, string][] = [
       '\n\n--- MY DECISION ---\n' +
       (t || '(describe your decision and how you got to it here)') +
       '\n\nProduce the composed audit: THE CALL (verdict first, naming its top bias), THE AUDIT' +
-      " (biases with evidence from my words, outside view, premortem), SIT WITH THIS, THE RECALIBRATION."
+      ' (biases with evidence from my words, outside view, premortem), SIT WITH THIS, THE RECALIBRATION.' +
+      languageLine()
     );
   };
 
@@ -358,8 +420,28 @@ const heroBands: [string, string, string][] = [
   }
   .open-links {
     display: flex;
+    align-items: center;
     gap: 16px;
     flex: none;
+  }
+  .lang-pick {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-taupe);
+  }
+  .lang-pick select {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-ink);
+    background: #fff;
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    padding: 4px 6px;
+    cursor: pointer;
+  }
+  .lang-pick select:hover {
+    border-color: var(--color-taupe);
   }
   .link-btn {
     background: none;

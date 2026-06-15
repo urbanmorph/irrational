@@ -60,6 +60,14 @@ const json = `{
       Best used <strong>systematically</strong> — have an agent audit its own draft recommendation before it
       finalizes, or let a second agent red-team the first. That external check is where the real debiasing lives.
     </p>
+
+    <h2>Any language</h2>
+    <p class="pp">
+      Pass an optional <code class="inline-code">language</code> (e.g. <code class="inline-code">"Tamil"</code>,
+      <code class="inline-code">"Spanish"</code>) and the audit comes back in that language — the bias ids and
+      output keys stay canonical English, so the result is still parseable and trackable. No translation files
+      needed; your model does it in-context.
+    </p>
   </section>
 </Layout>
 

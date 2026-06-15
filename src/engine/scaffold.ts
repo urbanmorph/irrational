@@ -11,6 +11,8 @@ export interface AuditRequest {
   judgment: string;
   reasoning?: string;
   mode?: AuditMode;
+  /** natural language for the prose (e.g. "Tamil"); bias ids stay canonical */
+  language?: string;
 }
 
 export interface NeedsReasoning {
@@ -67,7 +69,18 @@ export const AUDIT_OUTPUT_SCHEMA = {
   },
 } as const;
 
-function buildInstructions(mode: AuditMode): string {
+function languageLine(language?: string): string[] {
+  const lang = (language ?? "").trim();
+  if (!lang || /^en(glish)?$/i.test(lang)) return [];
+  // Translate the prose only — bias ids and the output keys must stay canonical
+  // so structured/MCP consumers can still parse and track across languages.
+  return [
+    "",
+    `Respond entirely in ${lang}: write every section — the verdict, the evidence, the questions, the recalibration — in ${lang}. Keep the bias ids and the JSON output keys exactly as given (in English); translate only the prose.`,
+  ];
+}
+
+function buildInstructions(mode: AuditMode, language?: string): string {
   const step4 =
     mode === "retrospective"
       ? "4. Outcome-flip test — imagine the opposite outcome had occurred; if your lesson flips, the OUTCOME (not the decision) is writing it. State the lesson that survives."
@@ -92,6 +105,7 @@ function buildInstructions(mode: AuditMode): string {
     `6. Recalibrate — ${recal}, with a confidence level the user can defend.`,
     "",
     "Output: return the composed audit as JSON matching outputSchema. THE VERDICT COMES FIRST and must name its top bias, so the reader meets the evidence before the verdict.",
+    ...languageLine(language),
   ].join("\n");
 }
 
@@ -113,7 +127,7 @@ export function buildAuditDirective(
     mode,
     judgment,
     reasoning,
-    instructions: buildInstructions(mode),
+    instructions: buildInstructions(mode, req.language),
     candidateBiases: BIASES.map((b) => ({
       id: b.id,
       name: b.name,
@@ -125,9 +139,12 @@ export function buildAuditDirective(
 }
 
 /** The reusable prefix (adversarial contract + catalogue) the forge prepends. */
-export function forgePrefix(mode: AuditMode = "forward"): string {
+export function forgePrefix(
+  mode: AuditMode = "forward",
+  language?: string,
+): string {
   return [
-    buildInstructions(mode),
+    buildInstructions(mode, language),
     "",
     "Catalogue of biases you may cite (id — the question each implies):",
     ...BIASES.map((b) => `- ${b.id}: ${b.ask}`),
@@ -138,7 +155,7 @@ export function forgePrefix(mode: AuditMode = "forward"): string {
 export function forgePrompt(req: AuditRequest): string {
   const reasoning = (req.reasoning ?? "").trim();
   return [
-    forgePrefix(req.mode ?? "forward"),
+    forgePrefix(req.mode ?? "forward", req.language),
     "",
     "--- THE DECISION TO AUDIT ---",
     `Judgment: ${(req.judgment ?? "").trim()}`,

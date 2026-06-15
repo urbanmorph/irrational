@@ -46,6 +46,11 @@ export const TOOLS = [
           description:
             "forward = a decision you are about to make; retrospective = reviewing a past decision/outcome.",
         },
+        language: {
+          type: "string",
+          description:
+            'Optional. Natural language for the audit prose (e.g. "Tamil", "Spanish"). Bias ids and output keys stay canonical English so the result is still parseable. Defaults to English.',
+        },
       },
       required: ["judgment"],
     },
@@ -106,6 +111,7 @@ function handleToolCall(
         judgment: String(args.judgment ?? ""),
         reasoning: args.reasoning == null ? undefined : String(args.reasoning),
         mode: args.mode as AuditMode | undefined,
+        language: args.language == null ? undefined : String(args.language),
       });
       return toolResult(id, directive);
     }
