@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.urbanmorph/irrational",
+  "description": "Adversarial behavioural-bias engine — audits your decisions for cognitive biases via your own AI.",
+  "version": "0.1.0",
+  "websiteUrl": "https://irrational.pages.dev",
+  "repository": {
+    "url": "https://github.com/urbanmorph/irrational",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://irrational.pages.dev/mcp/server"
+    }
+  ]
+}
