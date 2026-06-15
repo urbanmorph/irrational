@@ -53,8 +53,12 @@ const json = `{
     <p class="pp">
       An agent calls <code class="inline-code">analyze_decision</code> with a judgment and the reasoning behind it.
       The tool returns a directive — the adversarial contract, the catalogue, the procedure, and the required
-      verdict-first output shape. The agent's own model produces the audit. <strong>The discipline is ours; the
-      reasoning is yours.</strong>
+      verdict-first output shape. The agent's own model produces the audit — as <strong>readable prose</strong> by
+      default. <strong>The discipline is ours; the reasoning is yours.</strong>
+    </p>
+    <p class="pp">
+      Need machine-parseable output? Pass <code class="inline-code">structured: true</code> and the audit comes
+      back as a JSON object (bias ids and keys in canonical English) you can store or compare across decisions.
     </p>
     <p class="pp">
       Best used <strong>systematically</strong> — have an agent audit its own draft recommendation before it

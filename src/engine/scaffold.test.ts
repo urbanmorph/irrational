@@ -57,6 +57,26 @@ describe("buildAuditDirective", () => {
     expect(i).toContain("system 1");
   });
 
+  it("defaults to readable prose, not a JSON object", () => {
+    const r = buildAuditDirective({ judgment: "a", reasoning: "b" });
+    if (r.status !== "audit") throw new Error("expected audit");
+    const i = r.instructions.toLowerCase();
+    expect(i).toContain("readable prose");
+    expect(i).not.toContain("output only a json");
+    expect(i).toContain("the call");
+    expect(i).toContain("the recalibration");
+  });
+
+  it("emits the JSON-object instruction only when structured is requested", () => {
+    const r = buildAuditDirective({
+      judgment: "a",
+      reasoning: "b",
+      structured: true,
+    });
+    if (r.status !== "audit") throw new Error("expected audit");
+    expect(r.instructions.toLowerCase()).toContain("output only a json");
+  });
+
   it("adds a language instruction when a language is given, and keeps bias ids canonical", () => {
     const r = buildAuditDirective({
       judgment: "a",

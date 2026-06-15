@@ -13,6 +13,8 @@ export interface AuditRequest {
   mode?: AuditMode;
   /** natural language for the prose (e.g. "Tamil"); bias ids stay canonical */
   language?: string;
+  /** opt into a machine-parseable JSON object instead of readable prose */
+  structured?: boolean;
 }
 
 export interface NeedsReasoning {
@@ -76,11 +78,33 @@ function languageLine(language?: string): string[] {
   // so structured/MCP consumers can still parse and track across languages.
   return [
     "",
-    `Respond entirely in ${lang}: write every section — the verdict, the evidence, the questions, the recalibration — in ${lang}. Keep the bias ids and the JSON output keys exactly as given (in English); translate only the prose.`,
+    `Respond entirely in ${lang}: write every section — the verdict, the evidence, the questions, the recalibration — in ${lang}. Keep the bias ids exactly as given (in English); translate only the prose.`,
   ];
 }
 
-function buildInstructions(mode: AuditMode, language?: string): string {
+function outputLine(structured?: boolean): string[] {
+  if (structured) {
+    return [
+      "",
+      "Output ONLY a JSON object matching outputSchema — keys and bias ids in English, prose values filled in. (For machine consumers that parse the result.) The verdict comes first and must name its top bias.",
+    ];
+  }
+  return [
+    "",
+    "Present the audit as readable prose in markdown — NOT JSON, no code block. Use these four sections, in order:",
+    "**THE CALL** — the verdict in one line, with a confidence level you can defend, naming the single biggest bias.",
+    "**THE AUDIT** — one line on which system (1 or 2) made the call; then each bias on its own line with the exact words from my reasoning that show it; then the outside-view base rate; then a one-line premortem.",
+    "**SIT WITH THIS** — 2–4 sharp, specific questions.",
+    "**THE RECALIBRATION** — the version of the decision that survives scrutiny (never a reflexive no), with a defensible confidence level.",
+    "The verdict comes first, so the reader meets the evidence before the conclusion.",
+  ];
+}
+
+function buildInstructions(
+  mode: AuditMode,
+  language?: string,
+  structured?: boolean,
+): string {
   const step4 =
     mode === "retrospective"
       ? "4. Outcome-flip test — imagine the opposite outcome had occurred; if your lesson flips, the OUTCOME (not the decision) is writing it. State the lesson that survives."
@@ -104,7 +128,7 @@ function buildInstructions(mode: AuditMode, language?: string): string {
     "5. Adversarial questions — 2–4 sharp, decision-specific questions to sit with.",
     `6. Recalibrate — ${recal}, with a confidence level the user can defend.`,
     "",
-    "Output: return the composed audit as JSON matching outputSchema. THE VERDICT COMES FIRST and must name its top bias, so the reader meets the evidence before the verdict.",
+    ...outputLine(structured),
     ...languageLine(language),
   ].join("\n");
 }
@@ -127,7 +151,7 @@ export function buildAuditDirective(
     mode,
     judgment,
     reasoning,
-    instructions: buildInstructions(mode, req.language),
+    instructions: buildInstructions(mode, req.language, req.structured),
     candidateBiases: BIASES.map((b) => ({
       id: b.id,
       name: b.name,

@@ -20,6 +20,13 @@ describe("mcp handler", () => {
     expect(result(r).protocolVersion).toBeTruthy();
   });
 
+  it("initialize ships server instructions telling clients to execute the directive", () => {
+    const r = result(call("initialize"));
+    expect(typeof r.instructions).toBe("string");
+    expect(r.instructions.toLowerCase()).toContain("execute");
+    expect(r.instructions.toLowerCase()).toContain("analyze_decision");
+  });
+
   it("tools/list returns exactly the three tools", () => {
     const names = result(call("tools/list")).tools.map((t: any) => t.name);
     expect(names).toEqual(

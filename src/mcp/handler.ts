@@ -8,6 +8,21 @@ import { buildAuditDirective, type AuditMode } from "../engine/scaffold";
 export const SERVER_INFO = { name: "irrational", version: "0.1.0" } as const;
 export const PROTOCOL_VERSION = "2024-11-05";
 
+// Server-level instructions: MCP clients (Claude Code, Claude Desktop, …) inject this
+// into the model's context so it knows how to USE the server, not just that it exists.
+export const SERVER_INSTRUCTIONS = [
+  "Irrational is an adversarial behavioural-bias auditor. It runs no model of its own:",
+  "`analyze_decision` returns a DIRECTIVE — an adversarial contract, the bias catalogue and a",
+  "procedure. You must EXECUTE that directive yourself to produce the audit; do not just print or",
+  "summarise it. Follow its instructions exactly: assume the user is biased, refuse to validate,",
+  "argue the other side, and tie every bias to the user's own words.",
+  "",
+  "Call analyze_decision with the user's judgment and the reasoning behind it (ask for the reasoning",
+  "first if only a conclusion is given). Output is readable prose by default; pass structured:true for",
+  "a parseable JSON object, and language to answer in another language.",
+  "Use list_biases / get_bias to reference or explain the 22-bias catalogue.",
+].join("\n");
+
 export interface JsonRpcRequest {
   jsonrpc?: string;
   id?: string | number | null;
@@ -49,7 +64,12 @@ export const TOOLS = [
         language: {
           type: "string",
           description:
-            'Optional. Natural language for the audit prose (e.g. "Tamil", "Spanish"). Bias ids and output keys stay canonical English so the result is still parseable. Defaults to English.',
+            'Optional. Natural language for the audit prose (e.g. "Tamil", "Spanish"). Bias ids stay canonical English so the result is still parseable. Defaults to English.',
+        },
+        structured: {
+          type: "boolean",
+          description:
+            "Optional. Default false → the audit comes back as readable prose. Set true to get a machine-parseable JSON object (bias ids/keys in English) for pipelines that store or compare audits.",
         },
       },
       required: ["judgment"],
@@ -112,6 +132,7 @@ function handleToolCall(
         reasoning: args.reasoning == null ? undefined : String(args.reasoning),
         mode: args.mode as AuditMode | undefined,
         language: args.language == null ? undefined : String(args.language),
+        structured: args.structured === true,
       });
       return toolResult(id, directive);
     }
@@ -143,6 +164,7 @@ export function handleMcp(req: JsonRpcRequest): JsonRpcResponse | null {
         protocolVersion: PROTOCOL_VERSION,
         capabilities: { tools: {} },
         serverInfo: SERVER_INFO,
+        instructions: SERVER_INSTRUCTIONS,
       });
     case "notifications/initialized":
     case "notifications/cancelled":
