@@ -1,4 +1,4 @@
-// Stateless MCP server, hand-rolled JSON-RPC 2.0 (no SDK — the whole engine is
+// Stateless MCP server, hand-rolled JSON-RPC 2.0 (no SDK, the whole engine is
 // "discipline as data"). Pure function: parsed request in, response out (or null for
 // notifications). The HTTP wrapper lives in the Pages Function.
 
@@ -12,7 +12,7 @@ export const PROTOCOL_VERSION = "2024-11-05";
 // into the model's context so it knows how to USE the server, not just that it exists.
 export const SERVER_INSTRUCTIONS = [
   "Irrational is an adversarial behavioural-bias auditor. It runs no model of its own:",
-  "`analyze_decision` returns a DIRECTIVE — an adversarial contract, the bias catalogue and a",
+  "`analyze_decision` returns a DIRECTIVE, an adversarial contract, the bias catalogue and a",
   "procedure. You must EXECUTE that directive yourself to produce the audit; do not just print or",
   "summarise it. Follow its instructions exactly: assume the user is biased, refuse to validate,",
   "argue the other side, and tie every bias to the user's own words.",

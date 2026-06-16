@@ -6,22 +6,22 @@ const families = Object.keys(FAMILIES) as Family[];
 ---
 
 <Layout
-  title="The pen-and-paper audit — Irrational"
-  description="A printable one-page bias audit. Run the same adversarial check on any decision with nothing but a pen — no app, no AI, no account."
+  title="The pen-and-paper audit · Irrational"
+  description="A printable one-page bias audit. Run the same adversarial check on any decision with nothing but a pen, no app, no AI, no account."
 >
   <section class="page-head no-print">
     <div class="wrap">
       <p class="label">Offline</p>
       <h1>The pen-and-paper audit.</h1>
       <p class="lede">
-        The whole method runs on paper — no app, no AI, no account. Print this, keep it in a notebook, and walk any
+        The whole method runs on paper, no app, no AI, no account. Print this, keep it in a notebook, and walk any
         decision through the same adversarial check the engine performs.
       </p>
       <button class="print-btn" onclick="window.print()">Print / Save as PDF →</button>
     </div>
   </section>
 
-  <!-- The sheet itself — styled for print. -->
+  <!-- The sheet itself, styled for print. -->
   <article class="sheet wrap">
     <header class="sheet-head">
       <div>
@@ -31,7 +31,7 @@ const families = Object.keys(FAMILIES) as Family[];
             <rect x="27" y="27" width="10" height="24" rx="5" fill="#ffffff"></rect>
             <circle cx="32" cy="16.5" r="5.5" fill="#e2452c"></circle>
           </svg>
-          <span class="sheet-title">Irrational — bias audit</span>
+          <span class="sheet-title">Irrational: bias audit</span>
         </div>
         <p class="sheet-sub">One decision, audited adversarially. Fill it in honestly; the goal is to be told no.</p>
       </div>
@@ -46,14 +46,14 @@ const families = Object.keys(FAMILIES) as Family[];
         <h3>1 · Spot the system</h3>
         <p class="hint">Did this come from fast intuition, or slow, deliberate analysis? A confident gut call dressed as analysis is the dangerous one.</p>
         <div class="opts">
-          <label><span class="box"></span> System 1 — fast / intuitive / "it just feels right"</label>
-          <label><span class="box"></span> System 2 — slow / deliberate / I worked it through</label>
+          <label><span class="box"></span> System 1: fast / intuitive / "it just feels right"</label>
+          <label><span class="box"></span> System 2: slow / deliberate / I worked it through</label>
         </div>
       </li>
 
       <li>
         <h3>2 · Name the biases</h3>
-        <p class="hint">Tick the ones at play — and for each, write the exact thing in your reasoning that shows it. No tick without evidence.</p>
+        <p class="hint">Tick the ones at play, and for each, write the exact thing in your reasoning that shows it. No tick without evidence.</p>
         <div class="fam-grid">
           {
             families.map((fam) => (
@@ -76,14 +76,14 @@ const families = Object.keys(FAMILIES) as Family[];
 
       <li>
         <h3>3 · Apply the outside view</h3>
-        <p class="hint">Forget this case. What usually happens in cases like this — the base rate — and how far is your estimate from it?</p>
+        <p class="hint">Forget this case. What usually happens in cases like this, the base rate, and how far is your estimate from it?</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
       </li>
 
       <li>
         <h3>4 · Run a premortem</h3>
-        <p class="hint">It's a year later and this decision failed. Write the single most likely reason — concretely.</p>
+        <p class="hint">It's a year later and this decision failed. Write the single most likely reason, concretely.</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
       </li>
@@ -91,16 +91,16 @@ const families = Object.keys(FAMILIES) as Family[];
       <li>
         <h3>5 · Sit with the hard questions</h3>
         <ul class="qlist">
-          <li>If you'd never started / already paid / heard that first number — would you still choose this today?</li>
+          <li>If you'd never started / already paid / heard that first number, would you still choose this today?</li>
           <li>What evidence would change your mind, and have you actually gone looking for it?</li>
           <li>Are you choosing this because it's best, or because it's the default / what everyone's doing / what you already want?</li>
-          <li>What's the realistic downside — and have you priced it in?</li>
+          <li>What's the realistic downside, and have you priced it in?</li>
         </ul>
       </li>
 
       <li>
         <h3>6 · Recalibrate</h3>
-        <p class="hint">The version of the decision that survives scrutiny (not a reflexive "no") — and a confidence level you can defend.</p>
+        <p class="hint">The version of the decision that survives scrutiny (not a reflexive "no"), and a confidence level you can defend.</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
         <p class="confidence">Confidence I can defend: <span class="conf-box"></span> %</p>
@@ -108,7 +108,7 @@ const families = Object.keys(FAMILIES) as Family[];
     </ol>
 
     <footer class="sheet-foot">
-      <span>irrational.pages.dev — open-source, runs no model, stores nothing</span>
+      <span>irrational.pages.dev: open-source, runs no model, stores nothing</span>
       <span>Method: Kahneman's System 1 / 2 · the outside view · the premortem</span>
     </footer>
   </article>

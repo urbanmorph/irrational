@@ -1,7 +1,7 @@
 # Irrational
 
 > An open, adversarial behavioural-bias engine. It audits a decision the way a disciplined
-> skeptic would — spotting whether fast intuition made the call, naming the specific cognitive
+> skeptic would, spotting whether fast intuition made the call, naming the specific cognitive
 > biases distorting it (each tied to your own words), and forcing the slow, deliberate check
 > before you trust it. It runs no AI model of its own: the reasoning is done by your own AI or
 > agent, via the web or an open MCP endpoint. No accounts, no keys, nothing stored.

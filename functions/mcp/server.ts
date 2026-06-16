@@ -1,4 +1,4 @@
-// Cloudflare Pages Function — the stateless MCP JSON-RPC endpoint at /mcp/server.
+// Cloudflare Pages Function, the stateless MCP JSON-RPC endpoint at /mcp/server.
 // All logic is the tested handleMcp(); this is just the HTTP layer. Living here (instead of
 // an Astro SSR route) keeps the rest of the site pure-static.
 import { handleMcp, type JsonRpcRequest } from "../../src/mcp/handler";

@@ -1,8 +1,8 @@
-# Irrational — open, public, and happy to be read by humans, search crawlers, and AI.
+# Irrational: open, public, and happy to be read by humans, search crawlers, and AI.
 User-agent: *
 Allow: /
 
-# AI answer engines are explicitly welcome — the catalogue is meant to be cited.
+# AI answer engines are explicitly welcome, the catalogue is meant to be cited.
 User-agent: GPTBot
 Allow: /
 User-agent: ClaudeBot

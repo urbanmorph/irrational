@@ -1,7 +1,7 @@
-# Local working docs, notes, and design specs — not part of the shipped project
+# Local working docs, notes, and design specs, not part of the shipped project
 supporting-docs/
 
-# Secrets / local env — never commit
+# Secrets / local env, never commit
 .dev.vars
 .dev.vars.*
 .env
@@ -18,5 +18,5 @@ dist/
 placeholder/
 style-tile/
 
-# MCP publisher local credentials — never commit
+# MCP publisher local credentials, never commit
 .mcpregistry_*

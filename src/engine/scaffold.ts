@@ -1,7 +1,7 @@
 // The engine scaffold. Irrational runs no model: this builds the *directive* that the
 // caller's own model (MCP client, or the user's AI via the web forge) executes. It
 // injects the adversarial contract, the catalogue, the procedure, and the required
-// composed-output shape — so the discipline is ours, the reasoning is theirs.
+// composed-output shape: so the discipline is ours, the reasoning is theirs.
 
 import { BIASES } from "../data/biases";
 
@@ -42,13 +42,13 @@ export interface AuditDirective {
 /** The composed-format shape the caller's model must return. */
 export const AUDIT_OUTPUT_SCHEMA = {
   verdict: {
-    call: "string — the recalibrated decision (or lesson) in one line",
-    confidence: "number 0–100 — defensible",
-    top_bias: "bias id — names the single biggest distortion",
+    call: "string: the recalibrated decision (or lesson) in one line",
+    confidence: "number 0–100, defensible",
+    top_bias: "bias id: names the single biggest distortion",
   },
   system: {
     dominant: "system-1 | system-2 | mixed",
-    overtrusted: "boolean — is a gut call trusted as analysis?",
+    overtrusted: "boolean: is a gut call trusted as analysis?",
     note: "string",
   },
   biases:
@@ -60,12 +60,12 @@ export const AUDIT_OUTPUT_SCHEMA = {
   },
   premortem: {
     most_likely_failure_reason:
-      "string (forward) — or the outcome-flip result (retrospective)",
+      "string (forward): or the outcome-flip result (retrospective)",
   },
-  adversarial_questions: "[string] — 2–4 sharp, decision-specific questions",
+  adversarial_questions: "[string]: 2–4 sharp, decision-specific questions",
   recalibration: {
     revised_judgment:
-      "string — the version that survives scrutiny (or the recalibrated lesson)",
+      "string: the version that survives scrutiny (or the recalibrated lesson)",
     confidence: "number 0–100",
     rationale: "string",
   },
@@ -74,11 +74,11 @@ export const AUDIT_OUTPUT_SCHEMA = {
 function languageLine(language?: string): string[] {
   const lang = (language ?? "").trim();
   if (!lang || /^en(glish)?$/i.test(lang)) return [];
-  // Translate the prose only — bias ids and the output keys must stay canonical
+  // Translate the prose only, bias ids and the output keys must stay canonical
   // so structured/MCP consumers can still parse and track across languages.
   return [
     "",
-    `Respond entirely in ${lang}: write every section — the verdict, the evidence, the questions, the recalibration — in ${lang}. Keep the bias ids exactly as given (in English); translate only the prose.`,
+    `Respond entirely in ${lang}: write every section: the verdict, the evidence, the questions, the recalibration, in ${lang}. Keep the bias ids exactly as given (in English); translate only the prose.`,
   ];
 }
 
@@ -86,16 +86,16 @@ function outputLine(structured?: boolean): string[] {
   if (structured) {
     return [
       "",
-      "Output ONLY a JSON object matching outputSchema — keys and bias ids in English, prose values filled in. (For machine consumers that parse the result.) The verdict comes first and must name its top bias.",
+      "Output ONLY a JSON object matching outputSchema, keys and bias ids in English, prose values filled in. (For machine consumers that parse the result.) The verdict comes first and must name its top bias.",
     ];
   }
   return [
     "",
-    "Present the audit as readable prose in markdown — NOT JSON, no code block. Use these four sections, in order:",
-    "**THE CALL** — the verdict in one line, with a confidence level you can defend, naming the single biggest bias.",
-    "**THE AUDIT** — one line on which system (1 or 2) made the call; then each bias on its own line with the exact words from my reasoning that show it; then the outside-view base rate; then a one-line premortem.",
-    "**SIT WITH THIS** — 2–4 sharp, specific questions.",
-    "**THE RECALIBRATION** — the version of the decision that survives scrutiny (never a reflexive no), with a defensible confidence level.",
+    "Present the audit as readable prose in markdown, NOT JSON, no code block. Use these four sections, in order:",
+    "**THE CALL**: the verdict in one line, with a confidence level you can defend, naming the single biggest bias.",
+    "**THE AUDIT**: one line on which system (1 or 2) made the call; then each bias on its own line with the exact words from my reasoning that show it; then the outside-view base rate; then a one-line premortem.",
+    "**SIT WITH THIS**: 2–4 sharp, specific questions.",
+    "**THE RECALIBRATION**: the version of the decision that survives scrutiny (never a reflexive no), with a defensible confidence level.",
     "The verdict comes first, so the reader meets the evidence before the conclusion.",
   ];
 }
@@ -107,26 +107,26 @@ function buildInstructions(
 ): string {
   const step4 =
     mode === "retrospective"
-      ? "4. Outcome-flip test — imagine the opposite outcome had occurred; if your lesson flips, the OUTCOME (not the decision) is writing it. State the lesson that survives."
-      : "4. Premortem — assume the call was wrong a year out; give the single most likely reason it failed, concretely.";
+      ? "4. Outcome-flip test: imagine the opposite outcome had occurred; if your lesson flips, the OUTCOME (not the decision) is writing it. State the lesson that survives."
+      : "4. Premortem: assume the call was wrong a year out; give the single most likely reason it failed, concretely.";
   const recal =
     mode === "retrospective"
       ? "the recalibrated lesson"
-      : 'a revised judgment (never a reflexive "no" — the version that survives scrutiny)';
+      : 'a revised judgment (never a reflexive "no", the version that survives scrutiny)';
 
   return [
     `You are Irrational, an adversarial behavioural-bias auditor (${mode} mode). Your job is NOT to be agreeable.`,
     "Assume the user is biased until proven otherwise. Refuse to validate; argue the other side. Be direct, not cruel.",
-    "Work strictly from the user's own words — make NO bias claim without quoting the evidence from their reasoning.",
+    "Work strictly from the user's own words, make NO bias claim without quoting the evidence from their reasoning.",
     "Use only biases from the provided catalogue; never invent one. Name the 2–4 that actually bite, not everything (precision over coverage).",
     "",
     "Procedure, in order:",
-    "1. Spot the system — fast intuition (System 1) or slow deliberation (System 2)? Flag if a gut call is trusted as analysis.",
-    "2. Name the biases — each tied to a quote/evidence from the user's own words.",
-    "3. Outside view — the base rate for the reference class, and the gap vs the user's estimate.",
+    "1. Spot the system: fast intuition (System 1) or slow deliberation (System 2)? Flag if a gut call is trusted as analysis.",
+    "2. Name the biases: each tied to a quote/evidence from the user's own words.",
+    "3. Outside view: the base rate for the reference class, and the gap vs the user's estimate.",
     step4,
-    "5. Adversarial questions — 2–4 sharp, decision-specific questions to sit with.",
-    `6. Recalibrate — ${recal}, with a confidence level the user can defend.`,
+    "5. Adversarial questions: 2–4 sharp, decision-specific questions to sit with.",
+    `6. Recalibrate: ${recal}, with a confidence level the user can defend.`,
     "",
     ...outputLine(structured),
     ...languageLine(language),
@@ -142,7 +142,7 @@ export function buildAuditDirective(
     return {
       status: "needs_reasoning",
       question:
-        "How did you arrive at this — walk me through your reasoning, not just the conclusion.",
+        "How did you arrive at this, walk me through your reasoning, not just the conclusion.",
     };
   }
   const mode = req.mode ?? "forward";
@@ -170,12 +170,12 @@ export function forgePrefix(
   return [
     buildInstructions(mode, language),
     "",
-    "Catalogue of biases you may cite (id — the question each implies):",
+    "Catalogue of biases you may cite (id, the question each implies):",
     ...BIASES.map((b) => `- ${b.id}: ${b.ask}`),
   ].join("\n");
 }
 
-/** A single pasteable prompt for the web forge — hands off to the user's own AI. */
+/** A single pasteable prompt for the web forge, hands off to the user's own AI. */
 export function forgePrompt(req: AuditRequest): string {
   const reasoning = (req.reasoning ?? "").trim();
   return [
@@ -185,6 +185,6 @@ export function forgePrompt(req: AuditRequest): string {
     `Judgment: ${(req.judgment ?? "").trim()}`,
     reasoning
       ? `How I arrived at it: ${reasoning}`
-      : "How I arrived at it: (not given — ask me for my reasoning before auditing).",
+      : "How I arrived at it: (not given: ask me for my reasoning before auditing).",
   ].join("\n");
 }

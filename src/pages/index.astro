@@ -25,7 +25,7 @@ const siteSchema = {
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Any',
       description:
-        'Audits a decision for cognitive biases: names the biases distorting your reasoning, applies the outside view and a premortem, and returns a recalibrated, verdict-first judgment. Runs no model — your own AI or MCP agent does the reasoning.',
+        'Audits a decision for cognitive biases: names the biases distorting your reasoning, applies the outside view and a premortem, and returns a recalibrated, verdict-first judgment. Runs no model, your own AI or MCP agent does the reasoning.',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       isAccessibleForFree: true,
       license: 'https://github.com/urbanmorph/irrational/blob/main/LICENSE',
@@ -54,10 +54,10 @@ const heroBands: [string, string, string][] = [
         <p class="label hl">Open · Adversarial · via MCP</p>
         <h1>Irrational</h1>
         <p class="tag">
-          A field guide to the mistakes your mind makes — and an engine that
+          A field guide to the mistakes your mind makes, and an engine that
           <em>refracts your decision</em> into the biases bending it.
         </p>
-        <p class="label hl scroll-cue">↓ audit a decision below — free, in your own AI</p>
+        <p class="label hl scroll-cue">↓ audit a decision below, free, in your own AI</p>
       </div>
 
       <div class="hero-right">
@@ -92,29 +92,29 @@ const heroBands: [string, string, string][] = [
 
       <div class="forge">
         <div class="searchbar">
-          <textarea id="forge-input" rows="2" placeholder="Type the decision you're weighing — and how you got to it…"></textarea>
+          <textarea id="forge-input" rows="2" placeholder="Type the decision you're weighing, and how you got to it…"></textarea>
           <button id="copy-btn" class="search-btn">Audit →</button>
         </div>
         <p class="forge-sub">
-          <span id="forge-note">Assembles the adversarial prompt — it runs in your AI; we keep no model and store nothing.</span>
+          <span id="forge-note">Assembles the adversarial prompt, it runs in your AI; we keep no model and store nothing.</span>
           <span class="open-links">
             <label class="lang-pick">
               Reply in
               <select id="forge-lang" aria-label="Language for the audit">
                 <option value="">English</option>
                 <optgroup label="Indian languages">
-                  <option value="Hindi">हिन्दी — Hindi</option>
-                  <option value="Bengali">বাংলা — Bengali</option>
-                  <option value="Marathi">मराठी — Marathi</option>
-                  <option value="Telugu">తెలుగు — Telugu</option>
-                  <option value="Tamil">தமிழ் — Tamil</option>
-                  <option value="Gujarati">ગુજરાતી — Gujarati</option>
-                  <option value="Urdu">اردو — Urdu</option>
-                  <option value="Kannada">ಕನ್ನಡ — Kannada</option>
-                  <option value="Odia">ଓଡ଼ିଆ — Odia</option>
-                  <option value="Malayalam">മലയാളം — Malayalam</option>
-                  <option value="Punjabi">ਪੰਜਾਬੀ — Punjabi</option>
-                  <option value="Assamese">অসমীয়া — Assamese</option>
+                  <option value="Hindi">हिन्दी: Hindi</option>
+                  <option value="Bengali">বাংলা: Bengali</option>
+                  <option value="Marathi">मराठी: Marathi</option>
+                  <option value="Telugu">తెలుగు: Telugu</option>
+                  <option value="Tamil">தமிழ்: Tamil</option>
+                  <option value="Gujarati">ગુજરાતી: Gujarati</option>
+                  <option value="Urdu">اردو: Urdu</option>
+                  <option value="Kannada">ಕನ್ನಡ: Kannada</option>
+                  <option value="Odia">ଓଡ଼ିଆ: Odia</option>
+                  <option value="Malayalam">മലയാളം: Malayalam</option>
+                  <option value="Punjabi">ਪੰਜਾਬੀ: Punjabi</option>
+                  <option value="Assamese">অসমীয়া: Assamese</option>
                 </optgroup>
                 <optgroup label="Other">
                   <option value="Spanish">Español</option>
@@ -155,8 +155,8 @@ const heroBands: [string, string, string][] = [
       <div class="why-inner">
         <p class="label why-kick">Why not just ask your AI?</p>
         <p class="why-line">
-          Because your AI is trained to <em>agree</em> — to help you execute the framing you walked in with.
-          Irrational assumes you're biased, refuses to validate, and <strong>argues the other side</strong> — and
+          Because your AI is trained to <em>agree</em>, to help you execute the framing you walked in with.
+          Irrational assumes you're biased, refuses to validate, and <strong>argues the other side</strong>, and
           every bias it names is <a href="/sources">cited to its primary source</a>, not improvised.
         </p>
       </div>
@@ -239,7 +239,7 @@ const heroBands: [string, string, string][] = [
     try {
       await navigator.clipboard.writeText(buildPrompt());
       copyBtn.textContent = 'Copied ✓';
-      if (note) note.textContent = 'Prompt copied — paste it into ChatGPT, Claude, or any AI.';
+      if (note) note.textContent = 'Prompt copied, paste it into ChatGPT, Claude, or any AI.';
       setTimeout(() => {
         copyBtn.textContent = 'Audit →';
         if (note) note.textContent = DEFAULT_NOTE;
@@ -253,7 +253,7 @@ const heroBands: [string, string, string][] = [
     b.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(buildPrompt());
-        if (note) note.textContent = 'Prompt copied — paste it into the new chat.';
+        if (note) note.textContent = 'Prompt copied, paste it into the new chat.';
       } catch {
         /* clipboard may be blocked; still open the chat */
       }
@@ -385,7 +385,7 @@ const heroBands: [string, string, string][] = [
     margin: 0 0 20px;
   }
 
-  /* the prominent "search bar" — the primary action */
+  /* the prominent "search bar", the primary action */
   .forge {
     max-width: 760px;
   }

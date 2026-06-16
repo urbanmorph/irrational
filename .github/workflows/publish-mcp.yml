@@ -1,7 +1,7 @@
 name: Publish to MCP Registry
 
 # Publishes server.json to the official MCP Registry (registry.modelcontextprotocol.io).
-# Runs on a GitHub Release, or manually. Auth is GitHub Actions OIDC — the workflow's own
+# Runs on a GitHub Release, or manually. Auth is GitHub Actions OIDC, the workflow's own
 # identity proves the io.github.urbanmorph namespace, so no secrets or stored tokens are needed.
 
 on:
