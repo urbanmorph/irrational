@@ -89,18 +89,30 @@ const heroBands: [string, string, string][] = [
       </div>
 
       <h2 class="engine-h">Audit a decision you're facing.</h2>
+      <p class="engine-sub">
+        Irrational writes the adversarial prompt; <strong>your own AI runs it</strong>. We have no model of our own,
+        and nothing you type is stored.
+      </p>
 
       <div class="forge">
         <div class="searchbar">
           <textarea id="forge-input" rows="2" placeholder="Type the decision you're weighing, and how you got to it…"></textarea>
-          <button id="copy-btn" class="search-btn">Audit →</button>
+          <button id="copy-btn" class="search-btn">Copy prompt</button>
         </div>
-        <p class="forge-sub">
-          <span id="forge-note">Assembles the adversarial prompt, it runs in your AI; we keep no model and store nothing.</span>
-          <span class="open-links">
-            <label class="lang-pick">
-              Reply in
-              <select id="forge-lang" aria-label="Language for the audit">
+
+        <ol class="forge-steps">
+          <li><b>1</b> Describe your decision</li>
+          <li><b>2</b> Copy the prompt (or open it in your AI)</li>
+          <li><b>3</b> Paste into your AI to get the audit</li>
+        </ol>
+
+        <div class="forge-actions">
+          <span class="open-lead">Open the prompt in:</span>
+          <button data-ai="chatgpt" class="link-btn">ChatGPT ↗</button>
+          <button data-ai="claude" class="link-btn">Claude ↗</button>
+          <label class="lang-pick">
+            Reply in
+            <select id="forge-lang" aria-label="Language for the audit">
                 <option value="">English</option>
                 <optgroup label="Indian languages">
                   <option value="Hindi">हिन्दी: Hindi</option>
@@ -124,10 +136,8 @@ const heroBands: [string, string, string][] = [
                 </optgroup>
               </select>
             </label>
-            <button data-ai="chatgpt" class="link-btn">Open in ChatGPT</button>
-            <button data-ai="claude" class="link-btn">Open in Claude</button>
-          </span>
-        </p>
+          </div>
+          <p class="forge-note" id="forge-note">We run no model; nothing you type is stored.</p>
       </div>
 
       <p class="or-label label">…or watch it work on a pre-built scenario</p>
@@ -239,11 +249,11 @@ const heroBands: [string, string, string][] = [
     try {
       await navigator.clipboard.writeText(buildPrompt());
       copyBtn.textContent = 'Copied ✓';
-      if (note) note.textContent = 'Prompt copied, paste it into ChatGPT, Claude, or any AI.';
+      if (note) note.textContent = 'Prompt copied. Now paste it into ChatGPT, Claude, or any AI to get your audit.';
       setTimeout(() => {
-        copyBtn.textContent = 'Audit →';
+        copyBtn.textContent = 'Copy prompt';
         if (note) note.textContent = DEFAULT_NOTE;
-      }, 2400);
+      }, 3200);
     } catch {
       copyBtn.textContent = 'Copy failed';
     }
@@ -253,7 +263,7 @@ const heroBands: [string, string, string][] = [
     b.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(buildPrompt());
-        if (note) note.textContent = 'Prompt copied, paste it into the new chat.';
+        if (note) note.textContent = 'Prompt copied. Paste it into the chat that just opened to get your audit.';
       } catch {
         /* clipboard may be blocked; still open the chat */
       }
@@ -382,12 +392,71 @@ const heroBands: [string, string, string][] = [
   }
   .engine-h {
     font-size: clamp(1.7rem, 4vw, 2.4rem);
-    margin: 0 0 20px;
+    margin: 0 0 10px;
+  }
+  .engine-sub {
+    max-width: 58ch;
+    margin: 0 0 22px;
+    color: #4a423b;
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+  .engine-sub strong {
+    color: var(--color-ink);
   }
 
-  /* the prominent "search bar", the primary action */
+  /* the prominent "search bar", where you build the prompt */
   .forge {
     max-width: 760px;
+  }
+  /* numbered flow so the copy-then-paste step is unmistakable */
+  .forge-steps {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px 22px;
+    margin: 14px 2px 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--color-taupe);
+  }
+  .forge-steps li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .forge-steps b {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: #fff;
+    font-size: 0.66rem;
+    flex: none;
+  }
+  .forge-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin: 16px 2px 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-taupe);
+  }
+  .open-lead {
+    color: var(--color-taupe);
+  }
+  .forge-note {
+    margin: 12px 2px 0;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--color-taupe);
+    line-height: 1.5;
   }
   .searchbar {
     display: flex;
