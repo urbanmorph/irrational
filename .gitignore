@@ -20,3 +20,6 @@ style-tile/
 
 # MCP publisher local credentials, never commit
 .mcpregistry_*
+
+# Personal analytics tooling, local only
+scripts/
