@@ -1,13 +1,22 @@
 {
+  "id": "/",
   "name": "Irrational",
   "short_name": "Irrational",
   "description": "An open, adversarial behavioural-bias engine. Browse 22 biases; audit your decisions via your own AI or MCP.",
+  "lang": "en",
   "icons": [
     { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "theme_color": "#1a1a18",
   "background_color": "#f4efe6",
   "display": "standalone",
+  "scope": "/",
   "start_url": "/"
 }
