@@ -295,7 +295,8 @@ const heroBands: [string, string, string][] = [
     grid-template-columns: 1.05fr 0.95fr;
     gap: 46px;
     align-items: center;
-    padding: 78px 32px 64px;
+    --gutter: 32px; /* hero keeps its wider gutter on phones too */
+    padding-block: 78px 64px;
   }
   .hero h1 {
     font-style: italic;
@@ -646,7 +647,7 @@ const heroBands: [string, string, string][] = [
     .hero-grid {
       grid-template-columns: 1fr;
       gap: 30px;
-      padding: 54px 32px 40px;
+      padding-block: 54px 40px;
     }
     .hero-right {
       order: -1;
