@@ -14,6 +14,22 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/screenshot-narrow.webp",
+      "sizes": "824x1830",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Irrational home page on a phone"
+    },
+    {
+      "src": "/screenshot-wide.webp",
+      "sizes": "1280x800",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Irrational home page: the bias field guide and decision audit"
+    }
+  ],
   "theme_color": "#1a1a18",
   "background_color": "#f4efe6",
   "display": "standalone",

@@ -79,14 +79,17 @@ a {
 }
 
 /* ── Reusable ──────────────────────────────────────────────────────────────── */
+/* Page gutter; grows to clear a notch or rounded corner (viewport-fit=cover). */
 .wrap {
+  --gutter: 32px;
   max-width: 1140px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left))
+    max(var(--gutter), env(safe-area-inset-right));
 }
 @media (max-width: 480px) {
   .wrap {
-    padding: 0 20px;
+    --gutter: 20px;
   }
 }
 .mono {
