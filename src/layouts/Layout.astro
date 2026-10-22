@@ -6,11 +6,14 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  /** Keep the page out of search results (the offline fallback). */
+  noindex?: boolean;
 }
 
 const {
   title = 'Irrational: a field guide to the mistakes your mind makes',
   description = 'An open, adversarial behavioural-bias engine. Browse 22 biases and audit your decisions through your own AI or via MCP. We run no model and store nothing.',
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -24,6 +27,7 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -51,11 +55,22 @@ const ogImage = new URL('/og.png', Astro.site).href;
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
+      crossorigin
     />
   </head>
   <body>
     <Nav />
     <main class="above"><slot /></main>
     <Footer />
+    {
+      import.meta.env.PROD && (
+        <script is:inline>
+          // The offline worker (src/sw/sw.js): saves the site so it reads with no connection.
+          if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => {});
+          }
+        </script>
+      )
+    }
   </body>
 </html>

@@ -1,6 +1,7 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import serviceWorker from "./src/sw/precache";
 
 // Pure static site, no SSR adapter. Every page prerenders to static HTML served straight
 // from Cloudflare's CDN (so the Web Analytics beacon auto-injects, and there's no whole-site
@@ -9,7 +10,11 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://irrational.pages.dev",
   output: "static",
-  integrations: [sitemap()],
+  // serviceWorker(): writes dist/sw.js, the offline worker, after the build.
+  integrations: [
+    sitemap({ filter: (page) => !page.endsWith("/offline/") }),
+    serviceWorker(),
+  ],
   image: { service: passthroughImageService() },
   vite: { plugins: [tailwindcss()] },
 });
