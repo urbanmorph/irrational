@@ -13,6 +13,7 @@ const html = (body: string) =>
   new Response(body, {
     headers: { "content-type": "text/html; charset=utf-8" },
   });
+const CSS = "/_astro/index.D_mT855W.css";
 const css = (body: string) =>
   new Response(body, { headers: { "content-type": "text/css" } });
 
@@ -25,10 +26,25 @@ class WorkerRequest extends Request {
   }
 }
 
-function makeWorker(version = "v1") {
-  const stores = new Map<string, Map<string, Response>>();
+/**
+ * A worker for one deploy. `stores` is the browser's Cache Storage, shared
+ * across deploys; the network serves only this deploy's build files.
+ */
+function makeWorker(
+  version = "v1",
+  {
+    assets = [CSS],
+    stores = new Map<string, Map<string, Response>>(),
+  }: { assets?: string[]; stores?: Map<string, Map<string, Response>> } = {},
+) {
   const keyOf = (r: Request | string) =>
     new URL(typeof r === "string" ? r : r.url, ORIGIN).href;
+  // Like the real Cache.add: fetches, and fails on anything but a 2xx.
+  const add = async (store: Map<string, Response>, r: Request | string) => {
+    const res = await net(new Request(keyOf(r)));
+    if (!res.ok) throw new TypeError(`add: ${res.status}`);
+    store.set(keyOf(r), res);
+  };
   const open = async (name: string) => {
     if (!stores.has(name)) stores.set(name, new Map());
     const store = stores.get(name)!;
@@ -38,12 +54,9 @@ function makeWorker(version = "v1") {
         void store.set(keyOf(r), res.clone()),
       delete: async (r: Request | string) => store.delete(keyOf(r)),
       keys: async () => [...store.keys()].map((u) => new Request(u)),
+      add: (r: Request | string) => add(store, r),
       addAll: async (rs: (Request | string)[]) => {
-        for (const r of rs) {
-          const res = await net(new Request(keyOf(r)));
-          if (!res.ok) throw new TypeError(`addAll: ${res.status}`);
-          store.set(keyOf(r), res);
-        }
+        for (const r of rs) await add(store, r);
       },
     };
   };
@@ -65,7 +78,7 @@ function makeWorker(version = "v1") {
     "/": () => html(`home ${version}`),
     "/about/": () => html(`about ${version}`),
     "/offline/": () => html("offline page"),
-    "/_astro/index.D_mT855W.css": () => css("body{}"),
+    ...Object.fromEntries(assets.map((a) => [a, () => css(`${a} body{}`)])),
     [FONT_CSS]: () => css("@font-face{}"),
     [FONT_FILE]: () =>
       new Response("font", { headers: { "content-type": "font/woff2" } }),
@@ -89,7 +102,7 @@ function makeWorker(version = "v1") {
     __PRECACHE__: {
       version,
       pages: ["/", "/about/", "/offline/"],
-      assets: ["/_astro/index.D_mT855W.css"],
+      assets,
     },
     location: new URL(`${ORIGIN}/sw.js`),
     addEventListener: (type: string, fn: Handler) => (handlers[type] = fn),
@@ -137,11 +150,27 @@ function makeWorker(version = "v1") {
   return { state, stores, lifecycle, request };
 }
 
-const page = (w: ReturnType<typeof makeWorker>, path: string) =>
-  w.request(path, { mode: "navigate" });
+type Worker = ReturnType<typeof makeWorker>;
+
+/** Deploys a new version over the same storage: install, then activate. */
+async function deploy(
+  version: string,
+  assets: string[],
+  stores: Worker["stores"],
+): Promise<Worker> {
+  const w = makeWorker(version, { assets, stores });
+  await w.lifecycle("install");
+  await w.lifecycle("activate");
+  return w;
+}
+
+const assetCaches = (w: Worker) =>
+  [...w.stores.keys()].filter((k) => k.startsWith("assets"));
+
+const page = (w: Worker, path: string) => w.request(path, { mode: "navigate" });
 
 describe("offline worker", () => {
-  let w: ReturnType<typeof makeWorker>;
+  let w: Worker;
   beforeEach(async () => {
     w = makeWorker();
     await w.lifecycle("install");
@@ -151,9 +180,7 @@ describe("offline worker", () => {
   it("saves every page and build file on install", async () => {
     w.state.online = false;
     expect(await (await page(w, "/about/"))!.text()).toBe("about v1");
-    expect(await (await w.request("/_astro/index.D_mT855W.css"))!.text()).toBe(
-      "body{}",
-    );
+    expect(await (await w.request(CSS))!.text()).toBe(`${CSS} body{}`);
   });
 
   it("serves pages from the network when online, so a new deploy shows at once", async () => {
@@ -178,12 +205,11 @@ describe("offline worker", () => {
 
   it("serves a hashed build file from the cache, and refetches a copy of the wrong type", async () => {
     w.state.fetched = [];
-    await w.request("/_astro/index.D_mT855W.css");
+    await w.request(CSS);
     expect(w.state.fetched).toEqual([]);
-    const assets = w.stores.get("assets")!;
-    assets.set(`${ORIGIN}/_astro/index.D_mT855W.css`, html("<!doctype html>"));
-    const res = (await w.request("/_astro/index.D_mT855W.css"))!;
-    expect(await res.text()).toBe("body{}");
+    w.stores.get("assets-v1")!.set(`${ORIGIN}${CSS}`, html("<!doctype html>"));
+    const res = (await w.request(CSS))!;
+    expect(await res.text()).toBe(`${CSS} body{}`);
   });
 
   it("caches the web fonts as they load, so they work offline later", async () => {
@@ -212,20 +238,75 @@ describe("offline worker", () => {
     ).toBeNull();
   });
 
-  it("on update, drops the old version's pages and unused build files", async () => {
-    w.stores
-      .get("assets")!
-      .set(`${ORIGIN}/_astro/old.AbCdEfGh.css`, css("old"));
-    const next = makeWorker("v2");
-    // Same storage: the new worker sees the old caches.
-    for (const [name, store] of w.stores) next.stores.set(name, store);
-    await next.lifecycle("install");
-    await next.lifecycle("activate");
+  it("on update, drops the old version's pages", async () => {
+    const next = await deploy("v2", [CSS], w.stores);
     expect(
       [...next.stores.keys()].filter((k) => k.startsWith("pages-")),
     ).toEqual(["pages-v2"]);
-    expect([...next.stores.get("assets")!.keys()]).toEqual([
-      `${ORIGIN}/_astro/index.D_mT855W.css`,
+  });
+});
+
+describe("across deploys", () => {
+  const OLD = "/_astro/old.AbCdEfGh.css";
+  const NEW = "/_astro/new.IjKlMnOp.css";
+
+  it("a tab still on the old version can load an old build file the new deploy no longer has", async () => {
+    const v1 = await deploy("v1", [CSS, OLD], new Map());
+    const v2 = await deploy("v2", [CSS, NEW], v1.stores);
+    v2.state.fetched = [];
+    const res = (await v2.request(OLD))!;
+    expect(await res.text()).toBe(`${OLD} body{}`);
+    expect(v2.state.fetched).toEqual([]);
+  });
+
+  it("copies unchanged build files from the last version instead of downloading them", async () => {
+    const v1 = await deploy("v1", [CSS, OLD], new Map());
+    const v2 = makeWorker("v2", { assets: [CSS, NEW], stores: v1.stores });
+    await v2.lifecycle("install");
+    expect(v2.state.fetched).not.toContain(`${ORIGIN}${CSS}`);
+    expect(v2.state.fetched).toContain(`${ORIGIN}${NEW}`);
+    expect([...v2.stores.get("assets-v2")!.keys()].sort()).toEqual(
+      [`${ORIGIN}${CSS}`, `${ORIGIN}${NEW}`].sort(),
+    );
+  });
+
+  it("downloads an unchanged build file again if the saved copy is the wrong type", async () => {
+    const v1 = await deploy("v1", [CSS], new Map());
+    v1.stores.get("assets-v1")!.set(`${ORIGIN}${CSS}`, html("<!doctype html>"));
+    const v2 = makeWorker("v2", { assets: [CSS], stores: v1.stores });
+    await v2.lifecycle("install");
+    expect(v2.state.fetched).toContain(`${ORIGIN}${CSS}`);
+  });
+
+  it("keeps only the current and the previous version's build files", async () => {
+    const v1 = await deploy("v1", [OLD], new Map());
+    const v2 = await deploy("v2", [CSS], v1.stores);
+    const v3 = await deploy("v3", [NEW], v2.stores);
+    expect(assetCaches(v3)).toEqual(["assets-v2", "assets-v3"]);
+    v3.state.online = false;
+    expect(await (await v3.request(CSS))!.text()).toBe(`${CSS} body{}`);
+    expect(await v3.request(OLD).catch(() => null)).toBeNull();
+  });
+
+  it("treats the old single `assets` cache as the previous version for one update", async () => {
+    // What earlier workers left: every build file in one cache named `assets`.
+    const stores: Worker["stores"] = new Map([
+      [
+        "assets",
+        new Map([
+          [`${ORIGIN}${CSS}`, css(`${CSS} body{}`)],
+          [`${ORIGIN}${OLD}`, css(`${OLD} body{}`)],
+        ]),
+      ],
     ]);
+    const v1 = makeWorker("v1", { assets: [CSS], stores });
+    await v1.lifecycle("install");
+    await v1.lifecycle("activate");
+    expect(v1.state.fetched).not.toContain(`${ORIGIN}${CSS}`);
+    expect(assetCaches(v1)).toEqual(["assets", "assets-v1"]);
+    v1.state.online = false;
+    expect(await (await v1.request(OLD))!.text()).toBe(`${OLD} body{}`);
+    const v2 = await deploy("v2", [NEW], stores);
+    expect(assetCaches(v2)).toEqual(["assets-v1", "assets-v2"]);
   });
 });
