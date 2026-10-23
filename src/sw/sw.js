@@ -5,11 +5,16 @@
 //   whose content type fits the file (never an HTML error page for a stylesheet);
 // - everything else (the MCP endpoint, POSTs, analytics) goes to the network.
 // There is no reader state to protect, so a new version takes over at once.
+// Each version keeps its build files in its own cache, and the one before is kept
+// too: Pages serves only the current deploy's files, so a tab still on the old
+// version would otherwise fail to load one of its files after an update.
 // The build prepends `self.__PRECACHE__`; see precache.ts.
 
 const { version, pages, assets } = self.__PRECACHE__;
 const PAGES = `pages-${version}`;
-const ASSETS = "assets";
+const ASSETS = `assets-${version}`;
+// Earlier workers kept every version's build files in one cache, named `assets`.
+const isAssetCache = (name) => name === "assets" || name.startsWith("assets-");
 const FONTS = "fonts";
 const OFFLINE = "/offline/";
 
@@ -26,15 +31,30 @@ const pageKey = (url) => {
 // Bypass the HTTP cache, so precaching never stores a stale copy.
 const fresh = (path) => new Request(path, { cache: "reload" });
 
+/** A copy of a build file from any version's cache, if its type fits. */
+async function savedAsset(path) {
+  const cached =
+    (await caches.match(path, { cacheName: ASSETS })) ??
+    (await caches.match(path));
+  return cached && typeMatches(path, cached.headers.get("content-type"))
+    ? cached
+    : undefined;
+}
+
 self.addEventListener("install", (event) => {
   self.skipWaiting();
   event.waitUntil(
     (async () => {
       const assetCache = await caches.open(ASSETS);
-      const have = new Set(
-        (await assetCache.keys()).map((r) => new URL(r.url).pathname),
+      await Promise.all(
+        assets.map(async (path) => {
+          // Unchanged build files are copied from the last version, not downloaded again.
+          const have = await savedAsset(path);
+          await (have
+            ? assetCache.put(path, have)
+            : assetCache.add(fresh(path)));
+        }),
       );
-      await assetCache.addAll(assets.filter((a) => !have.has(a)).map(fresh));
       await (await caches.open(PAGES)).addAll(pages.map(fresh));
     })(),
   );
@@ -43,16 +63,17 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      const old = (await caches.keys()).filter(
+      const names = await caches.keys();
+      const oldPages = names.filter(
         (k) => k.startsWith("pages-") && k !== PAGES,
       );
-      await Promise.all(old.map((k) => caches.delete(k)));
-      const keep = new Set(assets);
-      const assetCache = await caches.open(ASSETS);
-      for (const request of await assetCache.keys()) {
-        if (!keep.has(new URL(request.url).pathname))
-          await assetCache.delete(request);
-      }
+      // Keep this version's build files and the one before (caches.keys() is in creation order).
+      const oldAssets = names
+        .filter((k) => isAssetCache(k) && k !== ASSETS)
+        .slice(0, -1);
+      await Promise.all(
+        [...oldPages, ...oldAssets].map((k) => caches.delete(k)),
+      );
       // Start the page request while the worker boots, instead of after.
       await self.registration.navigationPreload?.enable();
       await self.clients.claim();
@@ -91,13 +112,11 @@ async function page(event) {
 }
 
 async function asset(request, path) {
-  const cache = await caches.open(ASSETS);
-  const cached = await cache.match(path);
-  if (cached && typeMatches(path, cached.headers.get("content-type")))
-    return cached;
+  const cached = await savedAsset(path);
+  if (cached) return cached;
   const response = await fetch(request, { cache: "no-cache" });
   if (response.ok && typeMatches(path, response.headers.get("content-type"))) {
-    await cache.put(path, response.clone());
+    await (await caches.open(ASSETS)).put(path, response.clone());
   }
   return response;
 }
