@@ -21,8 +21,9 @@ const families = Object.keys(FAMILIES) as Family[];
     </div>
   </section>
 
-  <!-- The sheet itself, styled for print. -->
-  <article class="sheet wrap">
+  <!-- The sheet itself, styled for print; the frame gives it the page gutter. -->
+  <div class="wrap sheet-frame">
+  <article class="sheet">
     <header class="sheet-head">
       <div>
         <div class="mark-row">
@@ -112,6 +113,7 @@ const families = Object.keys(FAMILIES) as Family[];
       <span>Method: Kahneman's System 1 / 2 · the outside view · the premortem</span>
     </footer>
   </article>
+  </div>
 </Layout>
 
 <style>
@@ -312,6 +314,9 @@ const families = Object.keys(FAMILIES) as Family[];
     }
     :global(body) {
       background: #fff;
+    }
+    .sheet-frame {
+      padding-inline: 0;
     }
     .sheet {
       max-width: none;
