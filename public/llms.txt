@@ -34,7 +34,9 @@ recency, peak–end.
 - [Field guide](https://irrational.pages.dev/biases): all 22 biases with definitions and citations.
 - [Sources](https://irrational.pages.dev/sources): every citation, verified.
 - [Connect via MCP](https://irrational.pages.dev/mcp): the `analyze_decision`, `list_biases`,
-  `get_bias` tools; endpoint at https://irrational.pages.dev/mcp/server.
+  `get_bias` tools; endpoint at https://irrational.pages.dev/mcp/server. Also on npm as `irrational`
+  (https://www.npmjs.com/package/irrational): a local stdio MCP server (`npx -y irrational`) and a command
+  line (`npx irrational audit "<decision>" --why "<reasoning>"`).
 - [Printable audit](https://irrational.pages.dev/checklist): the method on one pen-and-paper page.
 - [About](https://irrational.pages.dev/about) · [Privacy](https://irrational.pages.dev/privacy)
 

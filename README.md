@@ -50,6 +50,20 @@ claude mcp add --transport http irrational https://irrational.pages.dev/mcp/serv
 }
 ```
 
+### Or run it locally, and on the command line
+
+The same engine as an npm package, [`irrational`](https://www.npmjs.com/package/irrational): a local stdio MCP server and a command line. It makes no network calls.
+
+```bash
+# Claude Code, local
+claude mcp add irrational -- npx -y irrational
+
+# the command line: prints the audit prompt; pipe it into claude -p, llm or ollama run
+npx irrational audit "Rewrite the backend this year" --why "the POC took two months"
+npx irrational audit - < plan.md
+npx irrational biases
+```
+
 Tools: `analyze_decision` (the adversarial audit) · `list_biases` · `get_bias`. Pass `language` for a reply in another language, or `structured: true` for parseable JSON.
 
 ## What's inside
