@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:cli": "esbuild src/cli/main.ts --bundle --platform=node --format=esm --target=node18 --banner:js='#!/usr/bin/env node' --outfile=cli/dist/irrational.mjs",
     "preview": "astro preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -22,6 +23,7 @@
     "@cloudflare/workers-types": "^4.20240909.0",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22.10.0",
+    "esbuild": "^0.27.7",
     "prettier": "^3.4.2",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.6.3",

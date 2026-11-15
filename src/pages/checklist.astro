@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { BIASES, FAMILIES, type Family } from '../data/biases';
+import { CHECKLIST } from '../data/checklist';
 
 const families = Object.keys(FAMILIES) as Family[];
+const [system, name, outside, premortem, questions, recal] = CHECKLIST.steps;
+const step = (n: number, s: { title: string }) => `${n} · ${s.title}`;
 ---
 
 <Layout
@@ -32,9 +35,9 @@ const families = Object.keys(FAMILIES) as Family[];
             <rect x="27" y="27" width="10" height="24" rx="5" fill="#ffffff"></rect>
             <circle cx="32" cy="16.5" r="5.5" fill="#e2452c"></circle>
           </svg>
-          <span class="sheet-title">Irrational: bias audit</span>
+          <span class="sheet-title">{CHECKLIST.title}</span>
         </div>
-        <p class="sheet-sub">One decision, audited adversarially. Fill it in honestly; the goal is to be told no.</p>
+        <p class="sheet-sub">{CHECKLIST.subtitle}</p>
       </div>
       <div class="meta">
         <p>Decision <span class="rule-line"></span></p>
@@ -44,17 +47,16 @@ const families = Object.keys(FAMILIES) as Family[];
 
     <ol class="steps">
       <li>
-        <h3>1 · Spot the system</h3>
-        <p class="hint">Did this come from fast intuition, or slow, deliberate analysis? A confident gut call dressed as analysis is the dangerous one.</p>
+        <h3>{step(1, system)}</h3>
+        <p class="hint">{system.hint}</p>
         <div class="opts">
-          <label><span class="box"></span> System 1: fast / intuitive / "it just feels right"</label>
-          <label><span class="box"></span> System 2: slow / deliberate / I worked it through</label>
+          {system.options?.map((o) => <label><span class="box"></span> {o}</label>)}
         </div>
       </li>
 
       <li>
-        <h3>2 · Name the biases</h3>
-        <p class="hint">Tick the ones at play, and for each, write the exact thing in your reasoning that shows it. No tick without evidence.</p>
+        <h3>{step(2, name)}</h3>
+        <p class="hint">{name.hint}</p>
         <div class="fam-grid">
           {
             families.map((fam) => (
@@ -70,47 +72,43 @@ const families = Object.keys(FAMILIES) as Family[];
             ))
           }
         </div>
-        <p class="evidence-label">Evidence, in my own words:</p>
+        <p class="evidence-label">{CHECKLIST.evidenceLabel}</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
       </li>
 
       <li>
-        <h3>3 · Apply the outside view</h3>
-        <p class="hint">Forget this case. What usually happens in cases like this, the base rate, and how far is your estimate from it?</p>
+        <h3>{step(3, outside)}</h3>
+        <p class="hint">{outside.hint}</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
       </li>
 
       <li>
-        <h3>4 · Run a premortem</h3>
-        <p class="hint">It's a year later and this decision failed. Write the single most likely reason, concretely.</p>
+        <h3>{step(4, premortem)}</h3>
+        <p class="hint">{premortem.hint}</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
       </li>
 
       <li>
-        <h3>5 · Sit with the hard questions</h3>
+        <h3>{step(5, questions)}</h3>
         <ul class="qlist">
-          <li>If you'd never started / already paid / heard that first number, would you still choose this today?</li>
-          <li>What evidence would change your mind, and have you actually gone looking for it?</li>
-          <li>Are you choosing this because it's best, or because it's the default / what everyone's doing / what you already want?</li>
-          <li>What's the realistic downside, and have you priced it in?</li>
+          {questions.questions?.map((q) => <li>{q}</li>)}
         </ul>
       </li>
 
       <li>
-        <h3>6 · Recalibrate</h3>
-        <p class="hint">The version of the decision that survives scrutiny (not a reflexive "no"), and a confidence level you can defend.</p>
+        <h3>{step(6, recal)}</h3>
+        <p class="hint">{recal.hint}</p>
         <span class="rule-line full"></span>
         <span class="rule-line full"></span>
-        <p class="confidence">Confidence I can defend: <span class="conf-box"></span> %</p>
+        <p class="confidence">{CHECKLIST.confidenceLabel} <span class="conf-box"></span> %</p>
       </li>
     </ol>
 
     <footer class="sheet-foot">
-      <span>irrational.pages.dev: open-source, runs no model, stores nothing</span>
-      <span>Method: Kahneman's System 1 / 2 · the outside view · the premortem</span>
+      {CHECKLIST.footer.map((f) => <span>{f}</span>)}
     </footer>
   </article>
   </div>

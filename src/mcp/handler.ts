@@ -94,6 +94,18 @@ export const TOOLS = [
   },
 ] as const;
 
+/** The catalogue, filtered by family: shared by the list_biases tool and `irrational biases`. */
+export function listBiases(family?: Family) {
+  const biases = family ? BIASES.filter((b) => b.family === family) : BIASES;
+  return { count: biases.length, biases };
+}
+
+/** One bias by id, or undefined: shared by the get_bias tool and `irrational bias`. */
+export const getBias = (id: unknown) => BIASES.find((b) => b.id === id);
+
+export const isFamily = (f: unknown): f is Family =>
+  FAMILY_VALUES.includes(f as Family);
+
 function ok(id: JsonRpcResponse["id"], result: unknown): JsonRpcResponse {
   return { jsonrpc: "2.0", id, result };
 }
@@ -137,12 +149,10 @@ function handleToolCall(
       return toolResult(id, directive);
     }
     case "list_biases": {
-      const family = args.family as Family | undefined;
-      const list = family ? BIASES.filter((b) => b.family === family) : BIASES;
-      return toolResult(id, { count: list.length, biases: list });
+      return toolResult(id, listBiases(args.family as Family | undefined));
     }
     case "get_bias": {
-      const bias = BIASES.find((b) => b.id === args.id);
+      const bias = getBias(args.id);
       if (!bias)
         return toolResult(
           id,

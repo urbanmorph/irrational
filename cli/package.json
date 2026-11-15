@@ -1,0 +1,36 @@
+{
+  "name": "irrational",
+  "version": "0.1.0",
+  "description": "Audit a decision for cognitive biases with your own AI: a CLI and a local MCP server. Runs no model; nothing leaves your machine.",
+  "type": "module",
+  "bin": {
+    "irrational": "dist/irrational.mjs"
+  },
+  "files": [
+    "dist/irrational.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "homepage": "https://irrational.pages.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbanmorph/irrational.git",
+    "directory": "cli"
+  },
+  "keywords": [
+    "cognitive-bias",
+    "decision-making",
+    "mcp",
+    "llm",
+    "prompt",
+    "cli"
+  ],
+  "mcpName": "io.github.urbanmorph/irrational",
+  "scripts": {
+    "prepack": "npm --prefix .. run build:cli && cp ../LICENSE LICENSE"
+  }
+}
