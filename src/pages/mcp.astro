@@ -4,6 +4,8 @@ import { TOOLS } from '../mcp/handler';
 
 const endpoint = 'https://irrational.pages.dev/mcp/server';
 const cli = `claude mcp add --transport http irrational ${endpoint}`;
+const local = `claude mcp add irrational -- npx -y irrational`;
+const run = `npx irrational audit "Rewrite the backend this year" --why "the POC took two months"`;
 const json = `{
   "mcpServers": {
     "irrational": { "type": "http", "url": "${endpoint}" }
@@ -45,6 +47,15 @@ const json = `{
 
     <h2>…or any MCP client</h2>
     <pre class="code"><code>{json}</code></pre>
+
+    <h2>…or run it locally</h2>
+    <p class="pp">
+      The npm package <a href="https://www.npmjs.com/package/irrational">irrational</a> is the same engine as a
+      local stdio MCP server, with no network calls:
+    </p>
+    <pre class="code"><code>{local}</code></pre>
+    <p class="pp">It is also a command line that prints the audit prompt for any model:</p>
+    <pre class="code"><code>{run}</code></pre>
 
     <h2>Tools</h2>
     <div class="tools">
