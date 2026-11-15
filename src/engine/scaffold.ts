@@ -166,9 +166,13 @@ export function buildAuditDirective(
 export function forgePrefix(
   mode: AuditMode = "forward",
   language?: string,
+  structured?: boolean,
 ): string {
   return [
-    buildInstructions(mode, language),
+    buildInstructions(mode, language, structured),
+    ...(structured
+      ? ["", "outputSchema:", JSON.stringify(AUDIT_OUTPUT_SCHEMA, null, 2)]
+      : []),
     "",
     "Catalogue of biases you may cite (id, the question each implies):",
     ...BIASES.map((b) => `- ${b.id}: ${b.ask}`),
@@ -179,7 +183,7 @@ export function forgePrefix(
 export function forgePrompt(req: AuditRequest): string {
   const reasoning = (req.reasoning ?? "").trim();
   return [
-    forgePrefix(req.mode ?? "forward", req.language),
+    forgePrefix(req.mode ?? "forward", req.language, req.structured),
     "",
     "--- THE DECISION TO AUDIT ---",
     `Judgment: ${(req.judgment ?? "").trim()}`,

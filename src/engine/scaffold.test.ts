@@ -131,4 +131,13 @@ describe("forgePrompt", () => {
     });
     expect(p).toContain("Spanish");
   });
+
+  it("asks for the JSON schema when structured, and for prose otherwise", () => {
+    const s = forgePrompt({ judgment: "x", reasoning: "y", structured: true });
+    expect(s).toContain("Output ONLY a JSON object");
+    expect(s).toContain(JSON.stringify(AUDIT_OUTPUT_SCHEMA, null, 2));
+    const p = forgePrompt({ judgment: "x", reasoning: "y" });
+    expect(p).toContain("readable prose");
+    expect(p).not.toContain("top_bias");
+  });
 });

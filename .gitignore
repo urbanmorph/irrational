@@ -8,6 +8,8 @@ supporting-docs/
 .env.*
 
 # Node / Astro / build
+# the npm package's licence is copied from the root at pack time
+cli/LICENSE
 node_modules/
 dist/
 .astro/
