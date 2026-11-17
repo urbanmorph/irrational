@@ -74,13 +74,34 @@ export const TOOLS = [
       },
       required: ["judgment"],
     },
+    annotations: {
+      title: "Audit a decision for biases",
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
   },
   {
     name: "list_biases",
     description: "List the 22-bias catalogue, optionally filtered by family.",
     inputSchema: {
       type: "object",
-      properties: { family: { type: "string", enum: FAMILY_VALUES } },
+      properties: {
+        family: {
+          type: "string",
+          enum: FAMILY_VALUES,
+          description:
+            "Optional. Only the biases in this family; omit for all 22.",
+        },
+      },
+    },
+    annotations: {
+      title: "List the bias catalogue",
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   },
   {
@@ -88,8 +109,21 @@ export const TOOLS = [
     description: "Get the full entry for one bias by id.",
     inputSchema: {
       type: "object",
-      properties: { id: { type: "string" } },
+      properties: {
+        id: {
+          type: "string",
+          description:
+            'The bias id, as list_biases returns it (e.g. "anchoring").',
+        },
+      },
       required: ["id"],
+    },
+    annotations: {
+      title: "Get one bias",
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   },
 ] as const;
