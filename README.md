@@ -8,6 +8,7 @@
 
 [![Live](https://img.shields.io/badge/live-irrational.pages.dev-5bbf7a?style=flat-square)](https://irrational.pages.dev)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-io.github.urbanmorph%2Firrational-1a1a18?style=flat-square)](https://registry.modelcontextprotocol.io/v0/servers?search=irrational)
+[![mcptry](https://mcptry.com/badge/io.github.urbanmorph/irrational)](https://mcptry.com/servers/io.github.urbanmorph/irrational)
 [![CI](https://img.shields.io/github/actions/workflow/status/urbanmorph/irrational/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/urbanmorph/irrational/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e2452c?style=flat-square)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-4aa6e0?style=flat-square)](CONTRIBUTING.md)

@@ -35,6 +35,29 @@ describe("mcp handler", () => {
     expect(names).toHaveLength(3);
   });
 
+  it("describes every argument of every tool, so a client knows what to pass", () => {
+    for (const t of result(call("tools/list")).tools) {
+      for (const [arg, schema] of Object.entries(
+        t.inputSchema.properties ?? {},
+      ))
+        expect((schema as any).description, `${t.name}.${arg}`).toMatch(
+          /\S{3}/,
+        );
+    }
+  });
+
+  it("marks every tool read-only and closed-world: they only read the catalogue and build a prompt", () => {
+    for (const t of result(call("tools/list")).tools) {
+      expect(t.annotations, t.name).toMatchObject({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      });
+      expect(t.annotations.title, t.name).toMatch(/\S/);
+    }
+  });
+
   it("analyze_decision with reasoning returns an audit directive with all biases", () => {
     const r = call("tools/call", {
       name: "analyze_decision",
