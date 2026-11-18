@@ -31,7 +31,7 @@ Verdict-first, every bias tied to your own words, grounded in a cited catalogue.
 
 ## Add it to your AI
 
-Listed on the **[official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=irrational)** as `io.github.urbanmorph/irrational`. Connect any MCP client to the live endpoint, no install, no keys:
+Listed on the **[official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=irrational)** as `io.github.urbanmorph/irrational`. Connect any MCP client to the live endpoint, no install, no keys. AI apps send their own name when they connect. We count calls by app (Claude, Cursor, …) and keep nothing else. Calling it from your own code? Please send a `User-Agent` that names your app (for example `my-app/1.0`). We read it only to tell apps, AI tools and crawlers apart, so our counts of how each mode is used stay honest. We don't store it, and we don't track who you are.
 
 ```bash
 # Claude Code
