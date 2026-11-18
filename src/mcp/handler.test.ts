@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
 import { handleMcp } from "./handler";
 import { BIASES } from "../data/biases";
 
@@ -18,6 +19,13 @@ describe("mcp handler", () => {
     const r = call("initialize");
     expect(result(r).serverInfo.name).toBe("irrational");
     expect(result(r).protocolVersion).toBeTruthy();
+  });
+
+  it("initialize reports the version listed in server.json (the MCP Registry's)", () => {
+    const server = JSON.parse(
+      readFileSync(new URL("../../server.json", import.meta.url), "utf8"),
+    );
+    expect(result(call("initialize")).serverInfo.version).toBe(server.version);
   });
 
   it("initialize ships server instructions telling clients to execute the directive", () => {

@@ -20,8 +20,8 @@ Evidence: this repository, [`src/data/biases.ts`](src/data/biases.ts), [/sources
 
 ### Decentralisation and no lock-in, ✅
 
-No account, no signup, no API keys. The reasoning is bring-your-own-model: the engine returns an adversarial directive that _your_ AI executes, we never run inference. The MCP endpoint is an open protocol any agent can call, the site is static and self-hostable, and the bias catalogue is open data. Nothing is trapped in the platform.
-Evidence: [/mcp](https://irrational.pages.dev/mcp), [`src/mcp/handler.ts`](src/mcp/handler.ts), [`src/pages/mcp/server.ts`](src/pages/mcp/server.ts), the [MIT licence](./LICENSE).
+No account, no signup, no API keys. The reasoning is bring-your-own-model: the engine returns an adversarial directive that _your_ AI executes, we never run inference. The MCP endpoint is an open protocol any agent can call, the same engine also runs as a local stdio MCP server from the npm package (`npx irrational`, no network calls), the site is static and self-hostable, and the bias catalogue is open data. Nothing is trapped in the platform.
+Evidence: [/mcp](https://irrational.pages.dev/mcp), [`src/mcp/handler.ts`](src/mcp/handler.ts), [`functions/mcp/server.ts`](functions/mcp/server.ts), the local server in [`src/cli/stdio.ts`](src/cli/stdio.ts), the [MIT licence](./LICENSE).
 
 ### Free software and the digital commons, ✅
 
@@ -47,8 +47,8 @@ Direction: still 🟡 until the first community contributions land; promote to �
 ### A non-digital alternative must exist, ✅
 
 The whole method works on paper. A printable one-page audit, the System 1 / 2 read, the 22 biases as checkboxes, the outside view, the premortem and the recalibration, lets anyone run the same adversarial check with nothing but a pen, no app, AI or account. The field guide and sources also read without JavaScript (the [/biases](https://irrational.pages.dev/biases) cards use native HTML `<details>`); only the live demo and the forge need it.
-Evidence: [/checklist](https://irrational.pages.dev/checklist) (print / save-as-PDF), the no-JS field guide.
-Direction: add a downloadable copy of the full catalogue as files for fully-offline reference.
+The full catalogue is also available fully offline: once visited, the whole field guide reads with no connection, and `npx irrational biases` (or `npx irrational bias <id> --format md -o <file>`) saves it as files.
+Evidence: [/checklist](https://irrational.pages.dev/checklist) (print / save-as-PDF), the no-JS field guide, the offline worker ([`src/sw/sw.js`](src/sw/sw.js), #3), the CLI ([`src/cli/run.ts`](src/cli/run.ts), #6/#7).
 
 ### Grassroots and reaching the divide-affected, 🟡
 
