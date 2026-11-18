@@ -31,7 +31,7 @@ Verdict-first, every bias tied to your own words, grounded in a cited catalogue.
 
 ## Add it to your AI
 
-Listed on the **[official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=irrational)** as `io.github.urbanmorph/irrational`. Connect any MCP client to the live endpoint, no install, no keys:
+Listed on the **[official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=irrational)** as `io.github.urbanmorph/irrational`. Connect any MCP client to the live endpoint, no install, no keys. We don't keep anything about MCP callers. Calling it from your own code? Please send a `User-Agent` that names your app (for example `my-app/1.0`). We don't store it, and we don't track who you are.
 
 ```bash
 # Claude Code
