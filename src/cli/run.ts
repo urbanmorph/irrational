@@ -14,7 +14,8 @@ import {
   forgePrompt,
   type AuditRequest,
 } from "../engine/scaffold";
-import { SERVER_INFO, getBias, isFamily, listBiases } from "../mcp/handler";
+import pkg from "../../cli/package.json";
+import { getBias, isFamily, listBiases } from "../mcp/handler";
 
 export interface Io {
   isTTY: boolean;
@@ -246,7 +247,7 @@ async function dispatch(
 ): Promise<Result> {
   if (v.version)
     return done(
-      `irrational ${SERVER_INFO.version} (catalogue: ${catalogueVersion()})\n`,
+      `irrational ${pkg.version} (catalogue: ${catalogueVersion()})\n`,
     );
   const [cmd, ...rest] = positionals;
   if (v.help || cmd === "help") return done(`${HELP}\n`);

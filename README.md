@@ -83,7 +83,7 @@ Astro (pure static) · Cloudflare Pages · a hand-rolled, dependency-free JSON-R
 ```bash
 npm install --ignore-scripts   # we don't use image optimization, so skip sharp's native build
 npm run dev                    # http://localhost:4321
-npm test                       # vitest, engine + catalogue (29 tests)
+npm test                       # vitest, engine + catalogue
 npm run build                  # static pages
 ```
 

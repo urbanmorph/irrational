@@ -2,10 +2,16 @@
 // "discipline as data"). Pure function: parsed request in, response out (or null for
 // notifications). The HTTP wrapper lives in the Pages Function.
 
+import server from "../../server.json";
 import { BIASES, FAMILIES, type Family } from "../data/biases";
 import { buildAuditDirective, type AuditMode } from "../engine/scaffold";
 
-export const SERVER_INFO = { name: "irrational", version: "0.1.0" } as const;
+// The version is server.json's, so the MCP Registry listing and the running server agree.
+// (The npm package has its own version, in server.json's packages list.)
+export const SERVER_INFO = {
+  name: "irrational",
+  version: server.version,
+} as const;
 export const PROTOCOL_VERSION = "2024-11-05";
 
 // Server-level instructions: MCP clients (Claude Code, Claude Desktop, …) inject this

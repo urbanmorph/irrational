@@ -46,7 +46,7 @@ are in the set.
 npm install --ignore-scripts   # skip sharp's native build; we don't use image optimization
 npm test                       # vitest, engine + catalogue
 npm run dev                    # http://localhost:4321
-npm run build                  # static pages + the MCP worker
+npm run build                  # static pages (the MCP endpoint is a Pages Function, functions/mcp/server.ts)
 ```
 
 PRs run the test + build + type-check gate in CI before they can merge.

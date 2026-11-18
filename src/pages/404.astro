@@ -1,0 +1,17 @@
+---
+// Cloudflare Pages serves dist/404.html, with a 404 status, for any path with no page.
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Not found · Irrational" description="There is no page at this address." noindex>
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">404</p>
+      <h1>No page here.</h1>
+      <p class="lede">
+        Nothing lives at this address. Go back to the <a href="/">home page</a> or browse the
+        <a href="/biases">catalogue of biases</a>.
+      </p>
+    </div>
+  </section>
+</Layout>

@@ -5,7 +5,10 @@ import { handleLine } from "./stdio";
 import { BIASES } from "../data/biases";
 import { CHECKLIST } from "../data/checklist";
 import { buildAuditDirective, forgePrompt } from "../engine/scaffold";
-import { SERVER_INFO } from "../mcp/handler";
+
+const json = (path: string) =>
+  JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
+const pkg = json("../../cli/package.json");
 
 function io(over: Partial<Io> = {}): Io & { written: Record<string, string> } {
   const written: Record<string, string> = {};
@@ -227,7 +230,7 @@ describe("modes and usage", () => {
     const r = await go(["--version"]);
     expect(r.stdout).toMatch(
       new RegExp(
-        `^irrational ${SERVER_INFO.version} \\(catalogue: ${BIASES.length} biases, [0-9a-f]{7}\\)`,
+        `^irrational ${pkg.version} \\(catalogue: ${BIASES.length} biases, [0-9a-f]{7}\\)`,
       ),
     );
   });
@@ -237,11 +240,14 @@ describe("modes and usage", () => {
     expect((await go(["biases", "--nope"])).code).toBe(2);
   });
 
-  it("keeps the package version in step with the server", () => {
-    const pkg = JSON.parse(
-      readFileSync(new URL("../../cli/package.json", import.meta.url), "utf8"),
+  // The npm package versions apart from the MCP server (server.json's own version):
+  // server.json's npm entry is what the Registry points at, so it must match the package.
+  it("keeps the package version in step with server.json's npm entry", () => {
+    const npm = json("../../server.json").packages.find(
+      (p: { registryType: string }) => p.registryType === "npm",
     );
-    expect(pkg.version).toBe(SERVER_INFO.version);
+    expect(npm.identifier).toBe(pkg.name);
+    expect(npm.version).toBe(pkg.version);
     expect(pkg.name).toBe("irrational");
   });
 });
